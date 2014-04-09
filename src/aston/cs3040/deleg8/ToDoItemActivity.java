@@ -1,12 +1,21 @@
 package aston.cs3040.deleg8;
 
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.CalendarContract;
+import android.provider.CalendarContract.Events;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import aston.cs3040.activity.SingleFragmentActivity;
+import aston.cs3040.deleg8.meeting.MeetingActivity;
+import aston.cs3040.deleg8.meeting.MeetingsListActivity;
 import aston.cs3040.model.ToDoItem;
+import aston.cs3040.model.WorkLoad;
 
 public class ToDoItemActivity extends SingleFragmentActivity {
 
@@ -37,9 +46,19 @@ public class ToDoItemActivity extends SingleFragmentActivity {
 	{
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.project_actions, menu);
+		inflater.inflate(R.menu.meeting_list_menu, menu);
+		
 		
 		return super.onCreateOptionsMenu(menu);
 	}
+	
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		
+	}
+	
 	
 	@Override 
 	public boolean onOptionsItemSelected(MenuItem item){
@@ -48,6 +67,9 @@ public class ToDoItemActivity extends SingleFragmentActivity {
 		case R.id.action_editProject:
 			EditProject();
 			return true;
+//		case R.id.action_addMeeting:
+//			AddMeeting();
+//			return true;
 		}
 		return false;
 	}
@@ -60,6 +82,18 @@ public class ToDoItemActivity extends SingleFragmentActivity {
 		startActivity(i);
 		
 	}
+	
+//	private void AddMeeting(){
+//		Intent i = new Intent(this,MeetingActivity.class);
+//		i.putExtra("ISNEW", true);
+//		i.putExtra("MLINK", "TDI");
+//		i.putExtra("TODOITEMID", tdi.getId());
+//		Log.i(WorkLoad.getInstance().TAG, "Intent TDI ID is "+ tdi.getId());
+//		i.putExtra("PROJECTID", tdi.getProjectid());
+//		startActivity(i);
+//		
+//
+//	}
 	
 	
 

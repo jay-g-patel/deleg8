@@ -8,7 +8,8 @@ public class Meeting
 {
 
 	public int iD;
-	public Date dateTime;
+	public long startdateTime;
+	public long endDateTime;
 	public Location loc;
 	public int projectID;
 	public int toDoItemID;
@@ -17,7 +18,6 @@ public class Meeting
 
 	public Meeting(Date dateTime, Location loc)
 	{
-		this.dateTime = dateTime;
 		this.loc = loc;
 	}
 
@@ -36,16 +36,27 @@ public class Meeting
 		this.iD = iD;
 	}
 	
-	public Date getDateTime()
+
+	public long getStartdateTime()
 	{
-		return dateTime;
+		return startdateTime;
 	}
 
-	public void setDateTime(Date dateTime)
+	public void setStartdateTime(long startdateTime)
 	{
-		this.dateTime = dateTime;
+		this.startdateTime = startdateTime;
 	}
 
+	public long getEndDateTime()
+	{
+		return endDateTime;
+	}
+
+	public void setEndDateTime(long endDateTime)
+	{
+		this.endDateTime = endDateTime;
+	}
+	
 	public Location getLoc()
 	{
 		return loc;

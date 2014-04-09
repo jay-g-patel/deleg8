@@ -25,10 +25,9 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	
 	public static final String MeetingsTable = "MeetingsTable";
 	public static final String INCMeetingID = "INCMeetingID";
-	public static final String MeetingID = "MeetingID";
+	public static final String EventID = "EventID";
 	public static final String MeetingProjectID = "MeetingProjectID";
 	public static final String MeetingToDoItemID = "MeetingToDoItemID";
-	public static final String MeetingDate = "MeetingDate";
 
 	public DatabaseHelper(Context context) {
 		super(context, DBNAME, null, 1);
@@ -44,12 +43,12 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 				" ("+projectID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+ projectName+ " TEXT)";
 		String sql1 = "CREATE TABLE " + ToDoListItemTable + 
 				" ("+ToDoItemID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+ ToDoItemName+ " TEXT, "+projectID+ " INTEGER)";
-//		String sqlmeetings = "CREATE TABLE " + MeetingsTable + 
-//				" ("+INCMeetingID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+ MeetingDate+" DATE, "+ MeetingProjectID+" INTEGER, "+ MeetingToDoItemID+" INTEGER)";
+		String sqlmeetings = "CREATE TABLE " + MeetingsTable + 
+				" ("+EventID+" LONG, "+ MeetingProjectID+" INTEGER)";
 		
 		db.execSQL(sql);
 		db.execSQL(sql1);
-//		db.execSQL(sqlmeetings);
+		db.execSQL(sqlmeetings);
 		
 		insertInitialProjects(db);
 		insertInitialToDoItems(db);
@@ -70,13 +69,15 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 		return getWritableDatabase().insert(ToDoListItemTable, null, cv1);
 	}
 	
-//	public long insertMeeting(Meeting meeting)
-//	{
-//		ContentValues cv1 = new ContentValues();
-//		cv1.put(ToDoItemName, meeting.getID());
-//		cv1.put(projectID, meeting.getProjectID());
-//		return getWritableDatabase().insert(ToDoListItemTable, null, cv1);
-//	}
+	public long insertMeeting(long eventID, int mprojectID)
+	{
+		ContentValues cv1 = new ContentValues();
+		cv1.put(EventID, eventID);
+		cv1.put(MeetingProjectID, mprojectID);
+		//cv1.put(MeetingToDoItemID, mtoDoItemID);
+		return getWritableDatabase().insert(MeetingsTable, null, cv1);
+		 	
+	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -159,6 +160,23 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 		
 	}
 	
+	public List<Long> getAllProjectMeetings(int projectID)
+	{
+		SQLiteDatabase db = this.getReadableDatabase();
+		//Cursor cursor = db.rawQuery("SELECT * FROM "+ ToDoListItemTable, null);
+		
+		Cursor cursor = db.rawQuery("SELECT * FROM "+ MeetingsTable + " WHERE " +MeetingProjectID+ " = "+projectID+"", null);
+		ArrayList<Long> meetings = new ArrayList<Long>();
+		cursor.moveToFirst();
+		while(!cursor.isAfterLast())
+		{
+			meetings.add(cursor.getLong(0));
+			cursor.moveToNext();
+		}
+		cursor.close();
+		return meetings;
+	}
+	
 	private Project createProject(Cursor cursor)
 	{
 		int pID = cursor.getInt(0);
@@ -217,6 +235,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 		Log.i(WorkLoad.TAG, "ToDoItem has been deleted");
 		
 	}
+	
 	
 	
 

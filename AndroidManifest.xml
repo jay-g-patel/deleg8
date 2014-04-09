@@ -3,11 +3,18 @@
     package="aston.cs3040.deleg8"
     android:versionCode="1"
     android:versionName="1.0" >
-    <uses-permission android:name="android.permission.READ_CALENDAR"/>
 
     <uses-sdk
         android:minSdkVersion="17"
         android:targetSdkVersion="17" />
+
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+
+    <uses-feature android:name="android.hardware.camera" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
         android:allowBackup="true"
@@ -42,6 +49,14 @@
         <activity
             android:name="aston.cs3040.deleg8.meeting.MeetingsListActivity"
             android:label="@string/title_activity_meetings_list" >
+        </activity>
+        <activity
+            android:name="aston.cs3040.gallery.ImageGallery"
+            android:label="@string/title_activity_image_gallery" >
+        </activity>
+        <activity
+            android:name="aston.cs3040.gallery.GalleryLayoutActivity"
+            android:label="@string/title_activity_gallery_layout" >
         </activity>
     </application>
 

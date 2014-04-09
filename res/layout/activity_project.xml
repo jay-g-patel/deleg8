@@ -20,10 +20,45 @@
         android:layout_height="wrap_content"
         android:visibility="invisible"
         android:text="@string/go_to_todolist" />
- 
-   <Button
+  <Button
         android:id="@+id/viewMeetings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/view_meetings" />
+ 
+  <!-- Capture picture button -->
+        <Button
+            android:id="@+id/btnCapturePicture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Take a Picture"
+            android:layout_marginBottom="10dp"/>
+ 
+        <!-- Record video button -->
+        <Button
+            android:id="@+id/btnRecordVideo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Record a Video" />
+        
+         <!-- To display picture taken -->
+        <ImageView
+            android:id="@+id/imgPreview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+ 
+        <!-- To preview video recorded -->
+        <VideoView
+            android:id="@+id/videoPreview"
+            android:layout_width="wrap_content"
+            android:layout_height="400dp"
+            android:visibility="gone" />
+        
+        <Button
+            android:id="@+id/btngoToGallery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Go To Gallery" />
+  
 </LinearLayout>

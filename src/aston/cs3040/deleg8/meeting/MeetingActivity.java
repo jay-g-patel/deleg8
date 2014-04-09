@@ -10,6 +10,8 @@ public class MeetingActivity extends SingleFragmentActivity
 	@Override
 	protected Fragment createFragment()
 	{
+		
+		
 		Fragment f = new MeetingFragment();
 		// TODO Auto-generated method stub
 		return f;

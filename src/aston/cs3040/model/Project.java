@@ -15,7 +15,7 @@ public class Project {
 	private int id;
 	private String projectName;
 	public ArrayList<ToDoItem> toDoList = new ArrayList<ToDoItem>();
-	private DatabaseHelper dbHelper = new DatabaseHelper(WorkLoad.getInstance().wAppContext);
+	private DatabaseHelper dbHelper = new DatabaseHelper(WorkLoad.getInstance().getwAppContext());
 	private ArrayList<Meeting> meetingsList;
 	
 	

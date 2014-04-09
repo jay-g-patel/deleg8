@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import aston.cs3040.deleg8.meeting.MeetingActivity;
+import aston.cs3040.deleg8.meeting.MeetingsListActivity;
 import aston.cs3040.model.*;
 
 public class ToDoItemFragment extends Fragment{
@@ -22,7 +23,7 @@ public class ToDoItemFragment extends Fragment{
 	private ToDoItem toDoItem;
 	private WorkLoad workLoad;
 	private View v;
-	private Button viewCalendar;
+	
 	
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
@@ -44,10 +45,12 @@ public class ToDoItemFragment extends Fragment{
 		v = inflater.inflate(R.layout.activity_to_do_item,  parent, false);
 		TextView ToDoItemName = (TextView)v.findViewById(R.id.ToDoItemName);
 		ToDoItemName.setText(toDoItem.getName());	
-
+		
 		//Log.i(WorkLoad.TAG, "getting project name "+ project.getName());
 		return v;
 	}
+	
+	
 	
 	
 //	

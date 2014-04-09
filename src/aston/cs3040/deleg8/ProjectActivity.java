@@ -1,6 +1,7 @@
 package aston.cs3040.deleg8;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -15,7 +16,22 @@ import aston.cs3040.model.WorkLoad;
 public class ProjectActivity extends SingleFragmentActivity{
 	private static boolean isnew = false;
 	private int projectID;
+	private Uri fileUri;
 	
+//	@Override
+//	public void onSaveInstanceState(Bundle outState) {
+//		super.onSaveInstanceState(outState);
+//		// save file url in bundle as it will be null on scren orientation
+//		// changes
+//		outState.putParcelable("file_uri", fileUri);
+//	}
+//	
+//	@Override
+//	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+//		super.onRestoreInstanceState(savedInstanceState);
+//		// get the file url
+//		fileUri = savedInstanceState.getParcelable("file_uri");
+//	}
 	
 	@Override
 	protected Fragment createFragment() {

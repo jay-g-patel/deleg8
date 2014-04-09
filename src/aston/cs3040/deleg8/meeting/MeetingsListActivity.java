@@ -25,12 +25,14 @@ public class MeetingsListActivity extends SingleFragmentActivity
 {
 
 	private int projectID;
+	//private int toDoItemID;
 	
 	
 	@Override
 	protected Fragment createFragment()
 	{
 		projectID =  getIntent().getIntExtra("PROJECTID", 0);
+		//toDoItemID = getIntent().getIntExtra("TODOITEMID", 0);
 		Fragment f = new MeetingsListFragment();
 		// TODO Auto-generated method stub
 		return f;
@@ -96,10 +98,14 @@ public class MeetingsListActivity extends SingleFragmentActivity
 	}
 	
 	private void AddMeeting(){
-		Intent i = new Intent(MeetingsListActivity.this,MeetingActivity.class);
+		Intent i = new Intent(this,MeetingActivity.class);
 		i.putExtra("ISNEW", true);
+		i.putExtra("MLINK", "TDI");
+		//i.putExtra("TODOITEMID", toDoItemID);
+		//Log.i(WorkLoad.getInstance().TAG, "Intent TDI ID is "+ toDoItemID);
 		i.putExtra("PROJECTID", projectID);
 		startActivity(i);
+		
 		
 
 	}

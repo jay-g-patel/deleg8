@@ -21,18 +21,20 @@
     <string name="view_meetings">View Meetings</string>
     <string name="title_activity_meeting">MeetingActivity</string>
     <string name="title_activity_meetings_list">MeetingsListActivity</string>
-	<string name="addMeeting">Add a Meeting</string>
-	<string name="title_label">Title</string>
-	<string name="description">Description</string>	
-	<string name="start_date">Start Date</string>
-	<string name="end_date">End Date</string>
-	<string name="start_time">Start Time</string>
-	<string name="end_time">End Time</string>
-	<string name="all_day">All Day</string>
-	<string name="Location">Location</string>	
-	<string name="from">From</string>
-	<string name="to">To</string>
-	<string name="button_cancel">Cancel</string>
-	<string name="button_save">Save</string>
-	
+    <string name="addMeeting">Add a Meeting</string>
+    <string name="title_label">Title</string>
+    <string name="description">Description</string>
+    <string name="start_date">Start Date</string>
+    <string name="end_date">End Date</string>
+    <string name="start_time">Start Time</string>
+    <string name="end_time">End Time</string>
+    <string name="all_day">All Day</string>
+    <string name="Location">Location</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="button_save">Save</string>
+    <string name="title_activity_image_gallery">ImageGallery</string>
+    <string name="title_activity_gallery_layout">GalleryLayoutActivity</string>
+
 </resources>
