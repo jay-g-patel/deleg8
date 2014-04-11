@@ -59,6 +59,10 @@
             android:name="aston.cs3040.gallery.GalleryLayoutActivity"
             android:label="@string/title_activity_gallery_layout" >
         </activity>
+        <activity
+            android:name="aston.cs3040.gallery.GridViewActivity"
+            android:label="@string/title_activity_grid_view" >
+        </activity>
     </application>
 
 </manifest>

@@ -36,5 +36,6 @@
     <string name="button_save">Save</string>
     <string name="title_activity_image_gallery">ImageGallery</string>
     <string name="title_activity_gallery_layout">GalleryLayoutActivity</string>
+    <string name="title_activity_grid_view">GridViewActivity</string>
 
 </resources>

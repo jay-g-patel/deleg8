@@ -28,7 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import aston.cs3040.deleg8.meeting.MeetingActivity;
 import aston.cs3040.deleg8.meeting.MeetingsListActivity;
-import aston.cs3040.gallery.GalleryLayoutActivity;
+import aston.cs3040.gallery.GridViewActivity;
 import aston.cs3040.model.Project;
 import aston.cs3040.model.WorkLoad;
 
@@ -130,7 +130,7 @@ public class ProjectFragment extends Fragment{
 			@Override
 			public void onClick(View view)
 			{
-				Intent i = new Intent(getActivity(), GalleryLayoutActivity.class);
+				Intent i = new Intent(getActivity(), GridViewActivity.class);
 				//i.putExtra("TODOITEMID", toDoItem.getId());
 				//i.putExtra("PROJECTID", getActivity().getIntent().getIntExtra("PID", 0));
 				
