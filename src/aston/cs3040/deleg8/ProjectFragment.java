@@ -9,11 +9,13 @@ import java.util.Locale;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
@@ -26,6 +28,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import aston.cs3040.deleg8.contacts.AppContactsListActivity;
+import aston.cs3040.deleg8.contacts.ContactActivity;
 import aston.cs3040.deleg8.meeting.MeetingActivity;
 import aston.cs3040.deleg8.meeting.MeetingsListActivity;
 import aston.cs3040.gallery.GridViewActivity;
@@ -42,6 +46,9 @@ public class ProjectFragment extends Fragment{
 	private ImageView imgPreview;
 	private Button btnCapturePicture;
 	private Button goToGallery;
+	private Button btnviewContacts;
+	private Button btnViewAppContacts;
+	private static final int REQUEST_CONTACT = 8;
 	
 	//Activity Request Codes
 	private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
@@ -86,6 +93,8 @@ public class ProjectFragment extends Fragment{
 		//Log.i(WorkLoad.TAG, "getting project name "+ project.getName());
 		viewToDoListButtonListener();
 		viewCalendarButtonListener();
+		viewContactsButtonListener();
+		viewAppContactsButtonListener();
 		//editProjectButtonListener();
 		goToGalleryButtonListener();
 		imgPreview = (ImageView) v.findViewById(R.id.imgPreview);
@@ -121,6 +130,19 @@ public class ProjectFragment extends Fragment{
 		
 	}
 	
+	private void viewContactsButtonListener()
+	{
+		btnviewContacts = (Button) v.findViewById(R.id.btnViewContacts);
+		btnviewContacts.setOnClickListener(new View.OnClickListener(){
+			public void onClick(View v){
+				Intent i = new Intent(Intent.ACTION_PICK,ContactsContract.Contacts.CONTENT_URI);
+				startActivityForResult(i, REQUEST_CONTACT);
+			}
+		});
+		
+		
+	}
+
 	private void goToGalleryButtonListener()
 	{
 		goToGallery = (Button)v.findViewById(R.id.btngoToGallery);
@@ -178,6 +200,24 @@ public class ProjectFragment extends Fragment{
 			
 	}
 	
+	public void viewAppContactsButtonListener()
+	{
+		//Log.i(WorkLoad.TAG, "Listener hit ");	
+		
+		btnViewAppContacts = (Button)v.findViewById(R.id.btnViewAppContacts);
+		btnViewAppContacts.setVisibility(View.VISIBLE);
+		btnViewAppContacts.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View view)
+			{
+				Intent i = new Intent(getActivity(), AppContactsListActivity.class);
+				startActivity(i);
+			}
+		}
+				);
+			
+	}
 	
 	public void viewToDoListButtonListener()
 	{
@@ -265,6 +305,40 @@ public class ProjectFragment extends Fragment{
 	                    "Sorry! Failed to capture image", Toast.LENGTH_SHORT)
 	                    .show();
 	        }
+	    }
+	    else if(requestCode == REQUEST_CONTACT){
+	    	Cursor cursor = null;
+	    	String id = "";
+	    	try{
+	    		Uri result = data.getData();
+	    		id = result.getLastPathSegment();
+	    		Log.i(WorkLoad.TAG, "contact id is "+ id);
+	    		
+	    		Log.i(WorkLoad.TAG, "id is - "+id);
+	    		cursor = getActivity().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null , ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "=?", new String[] { id }, null);
+	    		int nameIDX = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
+	    		//int emailIDX = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA);
+	    		int numberIDX = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DATA);
+	    		if(cursor.moveToFirst())
+	    		{
+	    			Log.i(WorkLoad.TAG, "IN THE CONTACTS SEARCH LOOPY");
+	    			String name = cursor.getString(nameIDX);
+	    			String number = cursor.getString(numberIDX);
+	    			//String email = cursor.getString(emailIDX);
+	    			Log.i(WorkLoad.TAG, "contact name = "+name);
+	    			Log.i(WorkLoad.TAG, "contact name = "+number);
+	    			Intent i = new Intent(getActivity(), ContactActivity.class);
+	    			i.putExtra("CONTACT_ID", id);
+	    			i.putExtra("CONTACT_NAME", name);
+	    			i.putExtra("CONTACT_NUMBER", number);
+	    			i.putExtra("SELECTED_FROM_PHONE_LIST", true);
+	    			startActivity(i);
+	    		}
+	    	}
+	    	catch(Exception e)
+	    	{
+	    		Log.i(WorkLoad.TAG, "ERROR HAS OCCURED ON CONTACT SELECT");
+	    	}
 	    }
 	}
 	

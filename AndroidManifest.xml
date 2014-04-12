@@ -16,6 +16,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <application
         android:allowBackup="true"
@@ -62,6 +63,18 @@
         <activity
             android:name="aston.cs3040.gallery.GridViewActivity"
             android:label="@string/title_activity_grid_view" >
+        </activity>
+        <activity
+            android:name="aston.cs3040.deleg8.contacts.ContactActivity"
+            android:label="@string/title_activity_contact"
+            android:parentActivityName="aston.cs3040.activity.SingleFragmentActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="aston.cs3040.activity.SingleFragmentActivity" />
+        </activity>
+        <activity
+            android:name="aston.cs3040.deleg8.contacts.AppContactsListActivity"
+            android:label="@string/title_activity_app_contacts_list" >
         </activity>
     </application>
 

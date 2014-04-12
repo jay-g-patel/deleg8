@@ -23,6 +23,12 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	public static final String ToDoItemID = "ToDoItemID";
 	public static final String ToDoItemName = "ToDoItemName";
 	
+	public static final String ContactsTable = "ContactsTable";
+	public static final String ContactID = "ContactID";
+	public static final String ContactName = "ContactName";
+	public static final String ContactNumber = "ContactNumber";
+	public static final String ContactEmail = "ContactEmail";
+	
 	public static final String MeetingsTable = "MeetingsTable";
 	public static final String INCMeetingID = "INCMeetingID";
 	public static final String EventID = "EventID";
@@ -45,10 +51,13 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 				" ("+ToDoItemID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+ ToDoItemName+ " TEXT, "+projectID+ " INTEGER)";
 		String sqlmeetings = "CREATE TABLE " + MeetingsTable + 
 				" ("+EventID+" LONG, "+ MeetingProjectID+" INTEGER)";
+		String sqlContacts =  "CREATE TABLE " + ContactsTable + 
+				" ("+ContactID+" STRING, "+ContactName+" STRING, "+ContactNumber+" STRING, "+ContactEmail+" STRING)";
 		
 		db.execSQL(sql);
 		db.execSQL(sql1);
 		db.execSQL(sqlmeetings);
+		db.execSQL(sqlContacts);
 		
 		insertInitialProjects(db);
 		insertInitialToDoItems(db);
@@ -234,6 +243,43 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 		
 		Log.i(WorkLoad.TAG, "ToDoItem has been deleted");
 		
+	}
+	
+	public void addContactToDB(Contact contact)
+	{
+		ContentValues cv1 = new ContentValues();
+		cv1.put(ContactID, contact.getContactID());
+		cv1.put(ContactName, contact.getName());
+		cv1.put(ContactNumber, contact.getNumber());
+		cv1.put(ContactEmail, contact.getEmail());
+		getWritableDatabase().insert(ContactsTable,null,cv1);
+	}
+	
+	public List<Contact> getAllContacts()
+	{
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.rawQuery("SELECT * FROM "+ ContactsTable, null);
+		List<Contact> contacts = new ArrayList<Contact>();
+		cursor.moveToFirst();
+		while(!cursor.isAfterLast())
+		{
+			Contact tmpContact = createContact(cursor);
+			contacts.add(tmpContact);
+			cursor.moveToNext();
+		}
+		cursor.close();
+		return contacts;
+		
+	}
+	
+	private Contact createContact(Cursor cursor)
+	{
+		String cID = cursor.getString(0);
+		String name = cursor.getString(1);
+		String number = cursor.getString(2);
+		String email = cursor.getString(3);
+		Contact contact = new Contact(cID,name,number,email);
+		return contact;
 	}
 	
 	

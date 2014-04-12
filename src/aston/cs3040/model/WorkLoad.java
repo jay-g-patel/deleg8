@@ -213,5 +213,18 @@ public class WorkLoad {
 		this.wAppContext = wAppContext;
 	}
 	
+	public void addContactToDB(Contact contact)
+	{
+		dbHelper.addContactToDB(contact);
+	}
+	
+	public List<Contact> getContacts() {
+		List<Contact> tmpcontacts = dbHelper.getAllContacts();
+		if (tmpcontacts == null) {
+			//Log.d("app", "projects are null");
+		}
+		return tmpcontacts;
+
+	} 
 
 }
