@@ -333,6 +333,10 @@ public class ProjectFragment extends Fragment{
 	    			i.putExtra("CONTACT_NUMBER", number);
 	    			i.putExtra("SELECTED_FROM_PHONE_LIST", true);
 	    			startActivity(i);
+//	    			Intent intent = new Intent(Intent.ACTION_VIEW);
+//	    		    Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, id);
+//	    		    intent.setData(uri);
+//	    			getActivity().startActivity(intent);
 	    		}
 	    	}
 	    	catch(Exception e)

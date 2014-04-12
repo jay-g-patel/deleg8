@@ -1,7 +1,10 @@
 package aston.cs3040.model;
 
+import java.io.Serializable;
+
 public class Contact
 {
+
 
 	private String contactID;
 	private String name;
@@ -10,6 +13,7 @@ public class Contact
 	
 	public Contact(String id, String name, String number, String email)
 	{
+		this.setContactID(id);
 		this.setName(name);
 		this.setNumber(number);
 		this.setEmail(email);

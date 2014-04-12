@@ -37,11 +37,19 @@ public class ContactFragment extends Fragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
 		v = inflater.inflate(R.layout.activity_contact,  parent, false);
+		boolean viewContact = getActivity().getIntent().getBooleanExtra("VIEW_CONTACT", false);
 		boolean fromPhoneContacts = getActivity().getIntent().getBooleanExtra("SELECTED_FROM_PHONE_LIST", false);
 		contactName = (EditText)v.findViewById(R.id.contactName_editText);
 		contactNumber = (EditText)v.findViewById(R.id.contactNumber_EditText);
 		contactEmailAddress = (EditText)v.findViewById(R.id.contactEmail_EditText);
 		btnSave = (Button)v.findViewById(R.id.btn_saveContact);
+		if(viewContact)
+		{
+			btnSave.setVisibility(View.GONE);
+			contactName.setEnabled(false);
+			contactNumber.setEnabled(false);
+			contactEmailAddress.setEnabled(false);
+		}
 		saveOnClickListener();
 		
 		
@@ -117,8 +125,9 @@ public class ContactFragment extends Fragment
 				String cEmail = contactEmailAddress.getText().toString();
 				String cID = getActivity().getIntent().getStringExtra("CONTACT_ID");
 				
-				Log.i(WorkLoad.TAG, "contact info is "+cName+ " "+cNumber+" "+cEmail);
+				Log.i(WorkLoad.TAG, "contact info is "+cID+" "+cName+ " "+cNumber+" "+cEmail);
 				Contact newContact = new Contact(cID, cName, cNumber, cEmail);
+				Log.i(WorkLoad.TAG, "Created contact ID is "+newContact.getContactID());
 				WorkLoad.getInstance().addContactToDB(newContact);
 				
 			}

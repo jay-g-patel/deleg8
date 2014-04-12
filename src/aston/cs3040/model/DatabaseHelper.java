@@ -249,6 +249,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	{
 		ContentValues cv1 = new ContentValues();
 		cv1.put(ContactID, contact.getContactID());
+		Log.i(WorkLoad.TAG, "contact ID is "+contact.getContactID());
 		cv1.put(ContactName, contact.getName());
 		cv1.put(ContactNumber, contact.getNumber());
 		cv1.put(ContactEmail, contact.getEmail());
@@ -274,7 +275,9 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	
 	private Contact createContact(Cursor cursor)
 	{
+		
 		String cID = cursor.getString(0);
+		Log.i(WorkLoad.TAG, "Create contact method - contact id is - "+cID);
 		String name = cursor.getString(1);
 		String number = cursor.getString(2);
 		String email = cursor.getString(3);

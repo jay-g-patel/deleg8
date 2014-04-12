@@ -6,15 +6,19 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemLongClickListener;
+import aston.cs3040.deleg8.ProjectActivity;
 import aston.cs3040.deleg8.ProjectListActivity;
 import aston.cs3040.deleg8.R;
 import aston.cs3040.model.Contact;
@@ -32,13 +36,33 @@ public class AppContactsListFragment extends ListFragment
 		
 		List <Contact> allContacts = WorkLoad.getInstance().getContacts();
 		
-//		this.setListAdapter(new ArrayAdapter<Project>(
-//				getActivity(),
-//				android.R.layout.simple_list_item_1,
-//				allProj));
+		this.setListAdapter(new ArrayAdapter<Contact>(
+				getActivity(),
+				android.R.layout.simple_list_item_1,
+				allContacts));
 				
 		adapter = new ContactsArrayAdapter(getActivity(), allContacts);
 		this.setListAdapter(adapter);
+		
+	}
+	
+	@Override
+	public void onListItemClick(ListView l, View v, int position, long id){
+		Contact c = (Contact)(getListAdapter()).getItem(position);
+		Log.i(WorkLoad.TAG, c.getName()+" was clicked");
+//		//Start the Project activity
+//		//Intent i = new Intent(getActivity(), ContactActivity.class);
+////		i.putExtra("CONTACT_ID", c.getContactID());
+////		i.putExtra("CONTACT_NAME",c.getName());
+////		i.putExtra("CONTACT_NUMBER", c.getNumber());
+////		i.putExtra("CONTACT_EMAIL", c.getEmail());
+////		i.putExtra("VIEW_CONTACT", true);
+//		//startActivity(i);
+//		Log.i(WorkLoad.TAG, "contactID is "+c.getContactID());
+		Intent intent = new Intent(Intent.ACTION_VIEW);
+	    Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, String.valueOf(c.getContactID()));
+	    intent.setData(uri);
+		getActivity().startActivity(intent);
 		
 	}
 	
@@ -65,6 +89,7 @@ public class AppContactsListFragment extends ListFragment
 			}
 			Contact contact = items.get(position);
 			Log.i(WorkLoad.TAG, "adding item at pos " + position);
+			Log.i(WorkLoad.TAG, "item at pos "+position+ " is contact "+contact.getContactID());
 
 			TextView titleTextView = (TextView) convertView
 					.findViewById(R.id.project_titleTextView);
