@@ -218,8 +218,8 @@ public class WorkLoad {
 		dbHelper.addContactToDB(contact);
 	}
 	
-	public List<Contact> getContacts() {
-		List<Contact> tmpcontacts = dbHelper.getAllContacts();
+	public List<String> getContacts(String projectID) {
+		List<String> tmpcontacts = dbHelper.getAllContactsForProject(projectID);
 		if (tmpcontacts == null) {
 			//Log.d("app", "projects are null");
 		}

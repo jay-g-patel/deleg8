@@ -46,9 +46,8 @@ public class ProjectFragment extends Fragment{
 	private ImageView imgPreview;
 	private Button btnCapturePicture;
 	private Button goToGallery;
-	private Button btnviewContacts;
 	private Button btnViewAppContacts;
-	private static final int REQUEST_CONTACT = 8;
+	
 	
 	//Activity Request Codes
 	private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
@@ -93,7 +92,6 @@ public class ProjectFragment extends Fragment{
 		//Log.i(WorkLoad.TAG, "getting project name "+ project.getName());
 		viewToDoListButtonListener();
 		viewCalendarButtonListener();
-		viewContactsButtonListener();
 		viewAppContactsButtonListener();
 		//editProjectButtonListener();
 		goToGalleryButtonListener();
@@ -130,18 +128,7 @@ public class ProjectFragment extends Fragment{
 		
 	}
 	
-	private void viewContactsButtonListener()
-	{
-		btnviewContacts = (Button) v.findViewById(R.id.btnViewContacts);
-		btnviewContacts.setOnClickListener(new View.OnClickListener(){
-			public void onClick(View v){
-				Intent i = new Intent(Intent.ACTION_PICK,ContactsContract.Contacts.CONTENT_URI);
-				startActivityForResult(i, REQUEST_CONTACT);
-			}
-		});
-		
-		
-	}
+	
 
 	private void goToGalleryButtonListener()
 	{
@@ -212,6 +199,7 @@ public class ProjectFragment extends Fragment{
 			public void onClick(View view)
 			{
 				Intent i = new Intent(getActivity(), AppContactsListActivity.class);
+				i.putExtra("PROJECTID", Integer.toString(project.getID()));
 				startActivity(i);
 			}
 		}
@@ -306,44 +294,7 @@ public class ProjectFragment extends Fragment{
 	                    .show();
 	        }
 	    }
-	    else if(requestCode == REQUEST_CONTACT){
-	    	Cursor cursor = null;
-	    	String id = "";
-	    	try{
-	    		Uri result = data.getData();
-	    		id = result.getLastPathSegment();
-	    		Log.i(WorkLoad.TAG, "contact id is "+ id);
-	    		
-	    		Log.i(WorkLoad.TAG, "id is - "+id);
-	    		cursor = getActivity().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null , ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "=?", new String[] { id }, null);
-	    		int nameIDX = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
-	    		//int emailIDX = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA);
-	    		int numberIDX = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DATA);
-	    		if(cursor.moveToFirst())
-	    		{
-	    			Log.i(WorkLoad.TAG, "IN THE CONTACTS SEARCH LOOPY");
-	    			String name = cursor.getString(nameIDX);
-	    			String number = cursor.getString(numberIDX);
-	    			//String email = cursor.getString(emailIDX);
-	    			Log.i(WorkLoad.TAG, "contact name = "+name);
-	    			Log.i(WorkLoad.TAG, "contact name = "+number);
-	    			Intent i = new Intent(getActivity(), ContactActivity.class);
-	    			i.putExtra("CONTACT_ID", id);
-	    			i.putExtra("CONTACT_NAME", name);
-	    			i.putExtra("CONTACT_NUMBER", number);
-	    			i.putExtra("SELECTED_FROM_PHONE_LIST", true);
-	    			startActivity(i);
-//	    			Intent intent = new Intent(Intent.ACTION_VIEW);
-//	    		    Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, id);
-//	    		    intent.setData(uri);
-//	    			getActivity().startActivity(intent);
-	    		}
-	    	}
-	    	catch(Exception e)
-	    	{
-	    		Log.i(WorkLoad.TAG, "ERROR HAS OCCURED ON CONTACT SELECT");
-	    	}
-	    }
+	    
 	}
 	
 	public Uri getOutputMediaFileUri(int type)

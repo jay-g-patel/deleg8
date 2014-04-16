@@ -1,11 +1,13 @@
 package aston.cs3040.deleg8.contacts;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -29,12 +31,29 @@ public class AppContactsListFragment extends ListFragment
 {
 	
 	private ContactsArrayAdapter adapter;
+	private String contactListProjectID = "";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		try{
+		if(!getActivity().getIntent().getStringExtra("PROJECTID").isEmpty())
+		{
+			contactListProjectID = getActivity().getIntent().getStringExtra("PROJECTID");
+			Log.i(WorkLoad.TAG, "project id in the app contacts list fragment is "+contactListProjectID);
+		}
+		}catch(Exception e)
+		{
+			Log.i(WorkLoad.TAG, "m "+e.getMessage());
+		}
 		
-		List <Contact> allContacts = WorkLoad.getInstance().getContacts();
+		List <String> allContactsIDs = WorkLoad.getInstance().getContacts(contactListProjectID);
+		List<Contact> allContacts = new ArrayList<Contact>();
+ 		for(String cid : allContactsIDs)
+		{
+ 			Contact tmpContact = createContactDetailsByID(cid);
+ 			allContacts.add(tmpContact);
+		}
 		
 		this.setListAdapter(new ArrayAdapter<Contact>(
 				getActivity(),
@@ -46,6 +65,58 @@ public class AppContactsListFragment extends ListFragment
 		
 	}
 	
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		adapter.updateContactsList();
+	}
+	
+	private Contact createContactDetailsByID(String cid)
+	{
+		
+			Contact c = null;
+			Cursor contactCursor = null;
+	    	Cursor emailCursor = null;
+	    	String id = cid;
+	    	try{
+	    		
+	    		Log.i(WorkLoad.TAG, "id is - "+id);
+	    		contactCursor = getActivity().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null , ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "=?", new String[] { id }, null);
+	    		int nameIDX = contactCursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
+	    		emailCursor = getActivity().getContentResolver().query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, null, ContactsContract.CommonDataKinds.Email.CONTACT_ID+"=?", new String[]{id},  null);
+	    		int emailIDX = emailCursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA);
+	    		int numberIDX = contactCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DATA);
+	    		String email = "";
+	    		if(contactCursor.moveToFirst())
+	    		{
+	    			Log.i(WorkLoad.TAG, "IN THE CONTACTS SEARCH LOOPY");
+	    			String name = contactCursor.getString(nameIDX);
+	    			String number = contactCursor.getString(numberIDX);
+	    			try{
+	    			emailCursor = getActivity().getContentResolver().query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, null, ContactsContract.CommonDataKinds.Email.CONTACT_ID+"=?", new String[]{id},  null);
+	    			
+	    			if(emailCursor.moveToFirst())
+	    			{
+	    				email = emailCursor.getString(emailIDX);
+	    			}
+	    			}
+	    			catch(Exception e)
+	    			{
+	    				Log.i(WorkLoad.TAG, "Error with Email");
+	    			}
+	    			c = new Contact(id,name,number,email,contactListProjectID);
+
+	    		}
+	    	}
+	    	catch(Exception e)
+	    	{
+	    		Log.i(WorkLoad.TAG, "ERROR HAS OCCURED ON CONTACT SELECT");
+	    	}
+	    	return c;
+	    }
+	
+
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id){
 		Contact c = (Contact)(getListAdapter()).getItem(position);
@@ -74,12 +145,19 @@ public class AppContactsListFragment extends ListFragment
 			this.items = contacts;
 		}
 		
-//		public void updateContactsList(){
-//			List<Contact> updatedContactsList = WorkLoad.getInstance().getContacts();
-//			items.clear();
-//			items.addAll(updatedContactsList);
-//			this.notifyDataSetChanged();
-//		}
+		public void updateContactsList(){
+			List<String> updatedContactsList = WorkLoad.getInstance().getContacts(contactListProjectID);
+			items.clear();
+			List<Contact> allContacts = new ArrayList<Contact>();
+	 		for(String cid : updatedContactsList)
+			{
+	 			Contact tmpContact = createContactDetailsByID(cid);
+	 			allContacts.add(tmpContact);
+			}
+	 		items.addAll(allContacts);
+			this.notifyDataSetChanged();
+		}
+		
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
@@ -141,6 +219,9 @@ public class AppContactsListFragment extends ListFragment
 
 		}
 		
+		
+		
+	
 		
 	}
 	

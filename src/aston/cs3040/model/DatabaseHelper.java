@@ -23,11 +23,13 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	public static final String ToDoItemID = "ToDoItemID";
 	public static final String ToDoItemName = "ToDoItemName";
 	
+	public static final String projectContactsID = "projectContactsID";
 	public static final String ContactsTable = "ContactsTable";
 	public static final String ContactID = "ContactID";
 	public static final String ContactName = "ContactName";
 	public static final String ContactNumber = "ContactNumber";
 	public static final String ContactEmail = "ContactEmail";
+	public static final String ContactProjectID = "ContactProjectID";
 	
 	public static final String MeetingsTable = "MeetingsTable";
 	public static final String INCMeetingID = "INCMeetingID";
@@ -52,7 +54,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 		String sqlmeetings = "CREATE TABLE " + MeetingsTable + 
 				" ("+EventID+" LONG, "+ MeetingProjectID+" INTEGER)";
 		String sqlContacts =  "CREATE TABLE " + ContactsTable + 
-				" ("+ContactID+" STRING, "+ContactName+" STRING, "+ContactNumber+" STRING, "+ContactEmail+" STRING)";
+				" ("+projectContactsID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+ContactID+" STRING, "+ContactProjectID+" String)";
 		
 		db.execSQL(sql);
 		db.execSQL(sql1);
@@ -247,25 +249,47 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	
 	public void addContactToDB(Contact contact)
 	{
+		
 		ContentValues cv1 = new ContentValues();
 		cv1.put(ContactID, contact.getContactID());
 		Log.i(WorkLoad.TAG, "contact ID is "+contact.getContactID());
 		cv1.put(ContactName, contact.getName());
 		cv1.put(ContactNumber, contact.getNumber());
 		cv1.put(ContactEmail, contact.getEmail());
+		cv1.put(ContactProjectID, contact.getProjectID());
+		Log.i(WorkLoad.TAG, "project id JUST BEFORE ENTERING INTO DB IS "+contact.getProjectID());
 		getWritableDatabase().insert(ContactsTable,null,cv1);
+		
+		Log.i(WorkLoad.TAG, "Entered contact into DB with values name/projectID = "+contact.getName()+"/"+contact.getProjectID());
 	}
 	
-	public List<Contact> getAllContacts()
+	public boolean doesContactExist(Contact contact)
 	{
+		boolean contactExists = false;
 		SQLiteDatabase db = this.getReadableDatabase();
-		Cursor cursor = db.rawQuery("SELECT * FROM "+ ContactsTable, null);
-		List<Contact> contacts = new ArrayList<Contact>();
+		Cursor cursor = db.rawQuery("SELECT * FROM "+ContactsTable+" WHERE "+ContactID+" =? AND "+ContactProjectID+" =?",new String[]{contact.getContactID(), contact.getProjectID()});
+		cursor.moveToFirst();
+		if(cursor.equals(null))
+		{
+			contactExists = false;
+		}
+		else
+		{
+			contactExists = true;
+		}
+		return contactExists;
+	}
+	
+	public List<String> getAllContactsForProject(String projectID)
+	{
+		Log.i(WorkLoad.TAG, "getting all contacts for project id - "+projectID);
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.rawQuery("SELECT "+ContactID+" FROM "+ ContactsTable+" WHERE "+ContactProjectID+" =?",new String[]{projectID});
+		List<String> contacts = new ArrayList<String>();
 		cursor.moveToFirst();
 		while(!cursor.isAfterLast())
 		{
-			Contact tmpContact = createContact(cursor);
-			contacts.add(tmpContact);
+			contacts.add(cursor.getString(0));
 			cursor.moveToNext();
 		}
 		cursor.close();
@@ -273,17 +297,16 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 		
 	}
 	
-	private Contact createContact(Cursor cursor)
-	{
-		
-		String cID = cursor.getString(0);
-		Log.i(WorkLoad.TAG, "Create contact method - contact id is - "+cID);
-		String name = cursor.getString(1);
-		String number = cursor.getString(2);
-		String email = cursor.getString(3);
-		Contact contact = new Contact(cID,name,number,email);
-		return contact;
-	}
+//	private Contact createContact(Cursor cursor)
+//	{
+//		
+//		String cID = cursor.getString(1);
+//		Log.i(WorkLoad.TAG, "Create contact method - contact id is - "+cID);
+//		Contact contact = new Contact(cID,name,number,email);
+//		return contact;
+//	}
+	
+	
 	
 	
 	
