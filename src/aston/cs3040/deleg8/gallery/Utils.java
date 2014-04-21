@@ -1,4 +1,4 @@
-package aston.cs3040.gallery.helper;
+package aston.cs3040.deleg8.gallery;
 
 import java.io.File;
 import java.util.ArrayList;

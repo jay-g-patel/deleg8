@@ -30,6 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import aston.cs3040.deleg8.contacts.AppContactsListActivity;
 import aston.cs3040.deleg8.contacts.ContactActivity;
+import aston.cs3040.deleg8.gallery.GridViewActivity;
 import aston.cs3040.deleg8.gallery.GridViewImageAdapter;
 import aston.cs3040.deleg8.meeting.MeetingActivity;
 import aston.cs3040.deleg8.meeting.MeetingsListActivity;
@@ -142,9 +143,10 @@ public class ProjectFragment extends Fragment{
 			public void onClick(View view)
 			{
 				Log.i(WorkLoad.TAG, "app Gallery intent");
-				Intent i = new Intent(getActivity(), GridViewImageAdapter.class);
+				Intent i = new Intent(getActivity(), GridViewActivity.class);
 				//i.putExtra("TODOITEMID", toDoItem.getId());
-				i.putExtra("PID", getActivity().getIntent().getIntExtra("PID", 0));
+				i.putExtra("PID", project.getID());
+				Log.i(WorkLoad.TAG, "project id in gallery intent is "+project.getID());
 				startActivity(i);
 			}
 		}
@@ -334,11 +336,11 @@ public class ProjectFragment extends Fragment{
                 cursor.close();
                 Log.i(WorkLoad.TAG,"Image path is "+picturePath);
                 
-                WorkLoad.getInstance().addImageToProject(picturePath,getActivity().getIntent().getIntExtra("PID", 0));
+                WorkLoad.getInstance().addImageToProject(picturePath,project.getID());
                 
-                Intent i = new Intent(getActivity(), GridViewImageAdapter.class);
+                Intent i = new Intent(getActivity(), GridViewActivity.class);
 				//i.putExtra("TODOITEMID", toDoItem.getId());
-				i.putExtra("PID", getActivity().getIntent().getIntExtra("PID", 0));
+				i.putExtra("PID", project.getID());
 				startActivity(i);
         }
 	    

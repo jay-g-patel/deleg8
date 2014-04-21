@@ -41,6 +41,11 @@
     <string name="title_activity_contact">ContactActivity</string>
     <string name="title_activity_app_contacts_list">AppContactsListActivity</string>
     <string name="addContact">Add a Contact</string>
-    
+    <string name="title_activity_app_gallery_">AppGallery_Activity</string>
+    <string name="title_activity_view_gallery_image">ViewGalleryImageActivity</string>
+    <string name="title_activity_project_gallery">ProjectGalleryActivity</string>
+    <string name="title_activity_project_gallery_image_adapter">ProjectGalleryImageAdapter</string>
+    <string name="title_activity_full_image">FullImageActivity</string>
+    <string name="title_activity_grid_layout">GridLayoutActivity</string>
 
 </resources>

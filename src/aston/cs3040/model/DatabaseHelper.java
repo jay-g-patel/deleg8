@@ -315,6 +315,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	public ArrayList<String> getAllProjectImages(int imageProjectID)
 	{
 		SQLiteDatabase db = this.getReadableDatabase();
+		Log.i(WorkLoad.TAG, "project id to get images is - "+imageProjectID);
 		Cursor cursor = db.rawQuery("SELECT "+ImageURL+" FROM "+ ImagesTable+" WHERE "+ImageProjectID+" =?",new String[]{String.valueOf(imageProjectID)});
 		ArrayList<String> imageURLs = new ArrayList<String>();
 		cursor.moveToFirst();
@@ -324,6 +325,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 			cursor.moveToNext();
 		}
 		cursor.close();
+		db.close();
 		return imageURLs;
 	}
 	
