@@ -36,6 +36,11 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	public static final String EventID = "EventID";
 	public static final String MeetingProjectID = "MeetingProjectID";
 	public static final String MeetingToDoItemID = "MeetingToDoItemID";
+	
+	public static final String ImagesTable = "ImagesTable";
+	public static final String ImageID = "ImageID";
+	public static final String ImageURL = "ImageURL";
+	public static final String ImageProjectID = "ImageProjectID";
 
 	public DatabaseHelper(Context context) {
 		super(context, DBNAME, null, 1);
@@ -55,14 +60,16 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 				" ("+EventID+" LONG, "+ MeetingProjectID+" INTEGER)";
 		String sqlContacts =  "CREATE TABLE " + ContactsTable + 
 				" ("+projectContactsID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+ContactID+" STRING, "+ContactProjectID+" String)";
+		String sqlImages = "CREATE TABLE " + ImagesTable + 
+				" ("+ImageID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+ ImageURL+ " TEXT, "+ImageProjectID+" INTEGER)";
 		
 		db.execSQL(sql);
 		db.execSQL(sql1);
 		db.execSQL(sqlmeetings);
 		db.execSQL(sqlContacts);
+		db.execSQL(sqlImages);
 		
 		insertInitialProjects(db);
-		insertInitialToDoItems(db);
 	}
 	
 	public long insertProject(Project project)
@@ -295,6 +302,29 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 		cursor.close();
 		return contacts;
 		
+	}
+
+	public void addImageToProject(String picturePath, int projectID)
+	{
+		ContentValues cv1 = new ContentValues();
+		cv1.put(ImageURL, picturePath);
+		cv1.put(ImageProjectID, projectID);
+		getWritableDatabase().insert(ImagesTable,null, cv1);
+	}
+	
+	public ArrayList<String> getAllProjectImages(int imageProjectID)
+	{
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.rawQuery("SELECT "+ImageURL+" FROM "+ ImagesTable+" WHERE "+ImageProjectID+" =?",new String[]{String.valueOf(imageProjectID)});
+		ArrayList<String> imageURLs = new ArrayList<String>();
+		cursor.moveToFirst();
+		while(!cursor.isAfterLast())
+		{
+			imageURLs.add(cursor.getString(0));
+			cursor.moveToNext();
+		}
+		cursor.close();
+		return imageURLs;
 	}
 	
 //	private Contact createContact(Cursor cursor)

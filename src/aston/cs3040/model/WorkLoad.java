@@ -225,6 +225,16 @@ public class WorkLoad {
 		}
 		return tmpcontacts;
 
+	}
+
+	public void addImageToProject(String picturePath, int projectID)
+	{
+		dbHelper.addImageToProject(picturePath, projectID );
+		
 	} 
 
+	public ArrayList<String> getAllProjectImages(int projectID)
+	{
+		return dbHelper.getAllProjectImages(projectID);
+	}
 }

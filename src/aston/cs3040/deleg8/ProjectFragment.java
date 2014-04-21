@@ -30,9 +30,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import aston.cs3040.deleg8.contacts.AppContactsListActivity;
 import aston.cs3040.deleg8.contacts.ContactActivity;
+import aston.cs3040.deleg8.gallery.GridViewImageAdapter;
 import aston.cs3040.deleg8.meeting.MeetingActivity;
 import aston.cs3040.deleg8.meeting.MeetingsListActivity;
-import aston.cs3040.gallery.GridViewActivity;
 import aston.cs3040.model.Project;
 import aston.cs3040.model.WorkLoad;
 
@@ -47,6 +47,7 @@ public class ProjectFragment extends Fragment{
 	private Button btnCapturePicture;
 	private Button goToGallery;
 	private Button btnViewAppContacts;
+	private Button btnViewAppGallery;
 	
 	
 	//Activity Request Codes
@@ -95,6 +96,7 @@ public class ProjectFragment extends Fragment{
 		viewAppContactsButtonListener();
 		//editProjectButtonListener();
 		goToGalleryButtonListener();
+		goToAppGalleryButtonListener();
 		imgPreview = (ImageView) v.findViewById(R.id.imgPreview);
 //        videoPreview = (VideoView) findViewById(R.id.videoPreview);
         btnCapturePicture = (Button) v.findViewById(R.id.btnCapturePicture);
@@ -130,6 +132,26 @@ public class ProjectFragment extends Fragment{
 	
 	
 
+	private void goToAppGalleryButtonListener()
+	{
+		goToGallery = (Button)v.findViewById(R.id.btnViewAppImages);
+		goToGallery.setVisibility(View.VISIBLE);
+		goToGallery.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View view)
+			{
+				Log.i(WorkLoad.TAG, "app Gallery intent");
+				Intent i = new Intent(getActivity(), GridViewImageAdapter.class);
+				//i.putExtra("TODOITEMID", toDoItem.getId());
+				i.putExtra("PID", getActivity().getIntent().getIntExtra("PID", 0));
+				startActivity(i);
+			}
+		}
+				);
+	}
+
+
 	private void goToGalleryButtonListener()
 	{
 		goToGallery = (Button)v.findViewById(R.id.btngoToGallery);
@@ -139,12 +161,12 @@ public class ProjectFragment extends Fragment{
 			@Override
 			public void onClick(View view)
 			{
-				Intent i = new Intent(getActivity(), GridViewActivity.class);
+				//Intent i = new Intent(getActivity(), GridViewActivity.class);
 				//i.putExtra("TODOITEMID", toDoItem.getId());
 				//i.putExtra("PROJECTID", getActivity().getIntent().getIntExtra("PID", 0));
-				
-				Log.i(WorkLoad.TAG, "Going to gallery now");
-				startActivity(i);
+				Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+			    photoPickerIntent.setType("image/*");
+			    startActivityForResult(photoPickerIntent, 1);
 			}
 		}
 				);
@@ -277,6 +299,7 @@ public class ProjectFragment extends Fragment{
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 	    // if the result is capturing Image
+		Log.i(WorkLoad.TAG, "On  Activity Result");
 	    if (requestCode == CAMERA_CAPTURE_IMAGE_REQUEST_CODE) {
 	        if (resultCode == Activity.RESULT_OK) {
 	            // successfully captured the image
@@ -287,15 +310,42 @@ public class ProjectFragment extends Fragment{
 	            Toast.makeText(getActivity(),
 	                    "User cancelled image capture", Toast.LENGTH_SHORT)
 	                    .show();
-	        } else {
+	        }
+	        
+	        	else {
 	            // failed to capture image
 	            Toast.makeText(getActivity(),
 	                    "Sorry! Failed to capture image", Toast.LENGTH_SHORT)
 	                    .show();
 	        }
 	    }
+	    else
+        {
+        	
+                Uri selectedImage = data.getData();
+                String[] filePathColumn = { MediaStore.Images.Media.DATA };
+        
+                Cursor cursor = getActivity().getContentResolver().query(selectedImage,
+                        filePathColumn, null, null, null);
+                cursor.moveToFirst();
+        
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                String picturePath = cursor.getString(columnIndex);
+                cursor.close();
+                Log.i(WorkLoad.TAG,"Image path is "+picturePath);
+                
+                WorkLoad.getInstance().addImageToProject(picturePath,getActivity().getIntent().getIntExtra("PID", 0));
+                
+                Intent i = new Intent(getActivity(), GridViewImageAdapter.class);
+				//i.putExtra("TODOITEMID", toDoItem.getId());
+				i.putExtra("PID", getActivity().getIntent().getIntExtra("PID", 0));
+				startActivity(i);
+        }
+	    
 	    
 	}
+	
+	
 	
 	public Uri getOutputMediaFileUri(int type)
 	{
