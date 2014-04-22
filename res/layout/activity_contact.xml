@@ -23,32 +23,26 @@
         android:id="@+id/contactNumber_EditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/editText1"
-        android:layout_below="@+id/editText1"
         android:layout_marginTop="34dp"
-        android:ems="10"
-        android:inputType="phone" />
+       android:inputType="phone" />
 
     <EditText
         android:id="@+id/contactEmail_EditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/editText2"
-        android:layout_below="@+id/editText2"
-        android:layout_marginTop="34dp"
-        android:ems="10"
+       	android:layout_marginTop="34dp"
         android:inputType="textEmailAddress" />
 
     <Button
         android:id="@+id/btn_EditContact"
         android:layout_width="wrap_content"
-        android:layout_height="33dp"
+        android:layout_height="wrap_content"
         android:text="@string/edit_to_do_item" />
     
     <Button
         android:id="@+id/btn_saveContact"
         android:layout_width="wrap_content"
-        android:layout_height="33dp"
+        android:layout_height="wrap_content"
         android:text="@string/button_save" />
 
 </LinearLayout>

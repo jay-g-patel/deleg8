@@ -243,4 +243,10 @@ public class WorkLoad {
 		dbHelper.deleteContact(contact);
 		
 	}
+
+	public int getProjectContactID(Contact c)
+	{
+		return dbHelper.getProjectContactID(c);
+		
+	}
 }

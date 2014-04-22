@@ -12,6 +12,10 @@ import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+/**
+ * @author Jayshree
+ *
+ */
 public class DatabaseHelper extends SQLiteOpenHelper{
 	public static final String DBNAME = "projectList";
 	
@@ -338,6 +342,25 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 		db.delete(ContactsTable, ContactID+" = ? AND "+ContactProjectID+" = ?", new String[] {contactID,contactProjectID});
 		
 		Log.i(WorkLoad.TAG, "ToDoItem has been deleted");
+		
+	}
+
+	
+	public int getProjectContactID(Contact c)
+	{
+		Log.i(WorkLoad.TAG, "getting all contacts for project id - "+c.getProjectID()); 
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.rawQuery("SELECT "+projectContactsID+" FROM "+ ContactsTable+" WHERE "+ContactProjectID+" =? AND "+ContactID+" =?",new String[]{c.getProjectID(), c.getContactID()});
+		int pCID = 0;
+		cursor.moveToFirst();
+		while(!cursor.isAfterLast())
+		{
+			pCID = cursor.getInt(0);
+			
+		}
+		cursor.close();
+		return pCID;
+		
 		
 	}
 	

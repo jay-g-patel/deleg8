@@ -122,19 +122,21 @@ public class AppContactsListFragment extends ListFragment
 	public void onListItemClick(ListView l, View v, int position, long id){
 		Contact c = (Contact)(getListAdapter()).getItem(position);
 		Log.i(WorkLoad.TAG, c.getName()+" was clicked");
-//		//Start the Project activity
-//		//Intent i = new Intent(getActivity(), ContactActivity.class);
-////		i.putExtra("CONTACT_ID", c.getContactID());
-////		i.putExtra("CONTACT_NAME",c.getName());
-////		i.putExtra("CONTACT_NUMBER", c.getNumber());
-////		i.putExtra("CONTACT_EMAIL", c.getEmail());
-////		i.putExtra("VIEW_CONTACT", true);
-//		//startActivity(i);
-//		Log.i(WorkLoad.TAG, "contactID is "+c.getContactID());
-		Intent intent = new Intent(Intent.ACTION_VIEW);
-	    Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, String.valueOf(c.getContactID()));
-	    intent.setData(uri);
-		getActivity().startActivity(intent);
+
+		Log.i(WorkLoad.TAG, "contactID is "+c.getContactID());
+		//WorkLoad.getInstance().getProjectContactID(c);
+//		Intent intent = new Intent(Intent.ACTION_VIEW);
+//	    Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, String.valueOf(c.getContactID()));
+//	    intent.setData(uri);
+//		getActivity().startActivity(intent);
+		Intent i = new Intent(getActivity(),ContactActivity.class);
+		i.putExtra("CONTACT_ID", c.getContactID());
+		i.putExtra("PROJECTID",c.getProjectID());
+		i.putExtra("CONTACT_NUMBER", c.getNumber());
+		i.putExtra("CONTACT_EMAIL", c.getEmail());
+		i.putExtra("VIEW_CONTACT", true);
+		i.putExtra("CONTACT_NAME", c.getName());
+		startActivity(i);
 		
 	}
 	

@@ -58,15 +58,18 @@ public class AppContactsListActivity extends SingleFragmentActivity
 		//take the correct action for each action button clicked
 		switch(item.getItemId()){
 		case R.id.action_addContact:
-			EditProject();
+			AddContactFromPhone();
 			return true;
 		}
 		return false;
 	}
 	
-	private void EditProject()
+
+
+	private void AddContactFromPhone()
 	{
 		Intent i = new Intent(Intent.ACTION_PICK,ContactsContract.Contacts.CONTENT_URI);
+		
 		startActivityForResult(i, REQUEST_CONTACT);
 	}
 	
@@ -119,6 +122,7 @@ public class AppContactsListActivity extends SingleFragmentActivity
 	    			i.putExtra("SELECTED_FROM_PHONE_LIST", true);
 	    			i.putExtra("PROJECTID", projectID);
 	    			Log.i(WorkLoad.TAG, "project id before contact intent is "+projectID);
+	    			i.putExtra("importContact", true);
 	    			startActivity(i); 
 
 	    		}

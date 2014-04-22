@@ -96,7 +96,6 @@ public class ProjectFragment extends Fragment{
 		viewCalendarButtonListener();
 		viewAppContactsButtonListener();
 		//editProjectButtonListener();
-		goToGalleryButtonListener();
 		goToAppGalleryButtonListener();
 		imgPreview = (ImageView) v.findViewById(R.id.imgPreview);
 //        videoPreview = (VideoView) findViewById(R.id.videoPreview);
@@ -154,25 +153,7 @@ public class ProjectFragment extends Fragment{
 	}
 
 
-	private void goToGalleryButtonListener()
-	{
-		goToGallery = (Button)v.findViewById(R.id.btngoToGallery);
-		goToGallery.setVisibility(View.VISIBLE);
-		goToGallery.setOnClickListener(new View.OnClickListener()
-		{
-			@Override
-			public void onClick(View view)
-			{
-				//Intent i = new Intent(getActivity(), GridViewActivity.class);
-				//i.putExtra("TODOITEMID", toDoItem.getId());
-				//i.putExtra("PROJECTID", getActivity().getIntent().getIntExtra("PID", 0));
-				Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-			    photoPickerIntent.setType("image/*");
-			    startActivityForResult(photoPickerIntent, 1);
-			}
-		}
-				);
-	}
+	
 
 	/*
 	 * Capturing Camera Image will lauch camera app requrest image capture

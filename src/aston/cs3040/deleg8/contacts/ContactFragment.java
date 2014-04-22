@@ -39,6 +39,7 @@ public class ContactFragment extends Fragment
 	String cID = "";
 	String proID = "";
 	boolean emailUpdate = false;
+	boolean numberUpdate = false;
 
 	public void onCreate(Bundle savedInstanceState)
 	{		
@@ -59,6 +60,9 @@ public class ContactFragment extends Fragment
 	public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
 		v = inflater.inflate(R.layout.activity_contact,  parent, false);
 		boolean viewContact = getActivity().getIntent().getBooleanExtra("VIEW_CONTACT", false);
+		boolean importContact = getActivity().getIntent().getBooleanExtra("importContact", false);
+		Log.i(WorkLoad.TAG, "view contact is "+viewContact);
+		Log.i(WorkLoad.TAG, "import contact is "+importContact);
 		boolean fromPhoneContacts = getActivity().getIntent().getBooleanExtra("SELECTED_FROM_PHONE_LIST", false);
 		contactName = (EditText)v.findViewById(R.id.contactName_editText);
 		contactNumber = (EditText)v.findViewById(R.id.contactNumber_EditText);
@@ -66,19 +70,26 @@ public class ContactFragment extends Fragment
 		btnSave = (Button)v.findViewById(R.id.btn_saveContact);
 		btnEdit = (Button)v.findViewById(R.id.btn_EditContact);
 		editContactButtonListener();
-		if(viewContact)
-		{
+//		if(viewContact)
+//		{
 			btnSave.setVisibility(View.GONE);
 			contactName.setEnabled(false);
 			contactNumber.setEnabled(false);
 			contactEmailAddress.setEnabled(false);
-		}
+//		}
+//		if(importContact)
+//		{
+			
+			
+//		}
 		saveOnClickListener();
 		
 		
 		contactName.setText(getActivity().getIntent().getStringExtra("CONTACT_NAME"));
 		contactNumber.setText(getActivity().getIntent().getStringExtra("CONTACT_NUMBER"));
 		contactEmailAddress.setText(getActivity().getIntent().getStringExtra("CONTACT_EMAIL"));
+		
+		
 		if(getActivity().getIntent().getStringExtra("CONTACT_EMAIL").equals(""))
 		{
 		emailUpdate = true;	
@@ -89,6 +100,16 @@ public class ContactFragment extends Fragment
 			btnSave.setEnabled(false);
 		}
 		
+		if(getActivity().getIntent().getStringExtra("CONTACT_NUMBER").equals(""))
+		{
+			numberUpdate = true;	
+		Log.i(WorkLoad.TAG, "email is  - "+getActivity().getIntent().getStringExtra("CONTACT_EMAIL"));
+		}
+		
+		if(TextUtils.isEmpty(contactNumber.getText().toString())) {
+			btnSave.setEnabled(false);
+		}
+		checkIfSaveable();
 		contactEmailAddress.addTextChangedListener(new TextWatcher() {
 		      @Override
 		      public void afterTextChanged(Editable arg0) {
@@ -108,6 +129,17 @@ public class ContactFragment extends Fragment
 		return v;
 	}
 	
+	private void checkIfSaveable()
+	{
+		if(!TextUtils.isEmpty(contactEmailAddress.getText().toString())
+				&& !TextUtils.isEmpty(contactEmailAddress.getText().toString()) &&
+				!TextUtils.isEmpty(contactEmailAddress.getText().toString()))
+		{
+			btnSave.setVisibility(View.VISIBLE);
+		}
+		
+	}
+
 	public void enableAddEmailIfReady()
 	{
 	      btnEdit.setEnabled(true);
@@ -243,6 +275,7 @@ public class ContactFragment extends Fragment
     			contactName.setText(name);
     			contactNumber.setText(number);
     			contactEmailAddress.setText(email);
+    			checkIfSaveable();
 //    			Intent i = new Intent(getActivity(), ContactActivity.class);
 //    			i.putExtra("CONTACT_ID", id);
 //    			i.putExtra("CONTACT_NAME", name);

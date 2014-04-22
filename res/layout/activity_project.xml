@@ -55,17 +55,6 @@
             android:layout_height="400dp"
             android:visibility="gone" />
         
-        <Button
-            android:id="@+id/btngoToGallery"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Go To Gallery" />
-        
-        <Button
-        android:id="@+id/btnViewContacts"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/button_view_contacts" />
         
         <Button
         android:id="@+id/btnViewAppContacts"
