@@ -249,4 +249,9 @@ public class WorkLoad {
 		return dbHelper.getProjectContactID(c);
 		
 	}
+	
+	public ArrayList<String> getAllProjectRoles(int projectID)
+	{
+		return dbHelper.getAllProjectRoles(projectID);
+	}
 }

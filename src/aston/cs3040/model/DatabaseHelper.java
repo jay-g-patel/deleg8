@@ -31,6 +31,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	public static final String ContactsTable = "ContactsTable";
 	public static final String ContactID = "ContactID";
 	public static final String ContactProjectID = "ContactProjectID";
+	public static final String ContactProjectRole = "ContactProjectRole";
 	
 	public static final String MeetingsTable = "MeetingsTable";
 	public static final String INCMeetingID = "INCMeetingID";
@@ -42,6 +43,15 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	public static final String ImageID = "ImageID";
 	public static final String ImageURL = "ImageURL";
 	public static final String ImageProjectID = "ImageProjectID";
+	
+	public static final String ProjectRolesTable = "ProjectRolesTable";
+	public static final String ProjectRoleID = "ProjectRoleID";
+	public static final String ProjectRole_ProjectID = "ProjectRole_ProjectID";
+	public static final String ProjectRole_Description = "ProjectRole_ProjectDescription";
+	
+	public static final String ProjectContactRoleTable = "ProjectContactRoleTable";
+	public static final String ProjectContactRole_ProjectRoleID = "ProjectContactRole_ProjectRoleID";
+	public static final String ProjectContactRole_ProjectContactID = "ProjectContactRole_ProjectContactID";
 
 	public DatabaseHelper(Context context) {
 		super(context, DBNAME, null, 1);
@@ -60,17 +70,24 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 		String sqlmeetings = "CREATE TABLE " + MeetingsTable + 
 				" ("+EventID+" LONG, "+ MeetingProjectID+" INTEGER)";
 		String sqlContacts =  "CREATE TABLE " + ContactsTable + 
-				" ("+projectContactsID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+ContactID+" STRING, "+ContactProjectID+" String)";
+				" ("+projectContactsID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+ContactID+" STRING, "+ContactProjectID+" String, "+ContactProjectRole+" STRING)";
 		String sqlImages = "CREATE TABLE " + ImagesTable + 
 				" ("+ImageID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+ ImageURL+ " TEXT, "+ImageProjectID+" INTEGER)";
+		String sqlProjectRoles = "CREATE TABLE " + ProjectRolesTable + 
+				" ("+ProjectRoleID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+ ProjectRole_ProjectID+ " INTEGER, "+ProjectRole_Description+" String)";
+		String sqlProjectContactRoles = "CREATE TABLE " + ProjectContactRoleTable + 
+				" ("+ProjectContactRole_ProjectContactID + " INTEGER PRIMARY KEY, "+ ProjectContactRole_ProjectRoleID+ " INTEGER)";
 		
 		db.execSQL(sql);
 		db.execSQL(sql1);
 		db.execSQL(sqlmeetings);
 		db.execSQL(sqlContacts);
 		db.execSQL(sqlImages);
+		db.execSQL(sqlProjectRoles);
+		db.execSQL(sqlProjectContactRoles);
 		
 		insertInitialProjects(db);
+		insertInitialRoles(db);
 	}
 	
 	public long insertProject(Project project)
@@ -121,6 +138,19 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 		
 		Log.i("DELEG8", " 1:" + projectOneId + "2:" + projectTwoId+ " 3:" + projectThreeId+ " 4:" + projectFourId);
 		
+	}
+	
+
+	private void insertInitialRoles(SQLiteDatabase db)
+	{
+		ContentValues cv1 = new ContentValues();
+		cv1.put(ProjectRole_ProjectID, 1);
+		cv1.put(ProjectRole_Description, "TeamLeader");
+		long ToDoItemOneId = db.insert(ProjectRolesTable, ProjectRoleID, cv1);
+		
+		cv1.put(ProjectRole_ProjectID, 1);
+		cv1.put(ProjectRole_Description, "photographer");
+		long ToDoItemTwoId = db.insert(ProjectRolesTable, ProjectRoleID, cv1);
 	}
 	
 	private void insertInitialToDoItems(SQLiteDatabase db)
@@ -362,6 +392,24 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 		return pCID;
 		
 		
+	}
+
+	public ArrayList<String> getAllProjectRoles(int projectID)
+	{
+		SQLiteDatabase db = this.getReadableDatabase();
+		Log.i(WorkLoad.TAG, "project id to get images is - "+projectID);
+		Cursor cursor = db.rawQuery("SELECT * FROM "+ ProjectRolesTable+" WHERE "+ProjectRole_ProjectID+" =?",new String[]{String.valueOf(projectID)});
+		ArrayList<String> projectRoles = new ArrayList<String>();
+		cursor.moveToFirst();
+		while(!cursor.isAfterLast())
+		{
+			String rDescipt = cursor.getString(2);
+			projectRoles.add(rDescipt);
+			cursor.moveToNext();
+		}
+		cursor.close();
+		db.close();
+		return projectRoles;
 	}
 	
 

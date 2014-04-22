@@ -1,6 +1,7 @@
 package aston.cs3040.deleg8.contacts;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,11 +22,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import aston.cs3040.deleg8.R;
 import aston.cs3040.deleg8.ToDoListActivity;
 import aston.cs3040.model.Contact;
+import aston.cs3040.model.Role;
 import aston.cs3040.model.WorkLoad;
 
 public class ContactFragment extends Fragment
@@ -40,6 +44,7 @@ public class ContactFragment extends Fragment
 	String proID = "";
 	boolean emailUpdate = false;
 	boolean numberUpdate = false;
+	Spinner roleSpinner = null;
 
 	public void onCreate(Bundle savedInstanceState)
 	{		
@@ -54,7 +59,33 @@ public class ContactFragment extends Fragment
 			proID = getActivity().getIntent().getStringExtra("PROJECTID");
 		}
 		
+
 	}
+	
+	public void addListenerOnSpinnerItemSelection() {
+		roleSpinner = (Spinner)v.findViewById(R.id.project_role_spinner);
+		roleSpinner.setOnItemSelectedListener(new CustomOnItemSelectedListener());
+	  }
+
+	public void addListenerOnButton() {
+		 
+		roleSpinner = (Spinner) v.findViewById(R.id.project_role_spinner);
+//		btnSubmit = (Button) findViewById(R.id.btnSubmit);
+//	 
+//		btnSubmit.setOnClickListener(new OnClickListener() {
+//	 
+//		  @Override
+//		  public void onClick(View v) {
+//	 
+//		    Toast.makeText(MyAndroidAppActivity.this,
+//			"OnClickListener : " + 
+//	                "\nSpinner 1 : "+ String.valueOf(spinner1.getSelectedItem()) + 
+//	                "\nSpinner 2 : "+ String.valueOf(spinner2.getSelectedItem()),
+//				Toast.LENGTH_SHORT).show();
+//		  }
+//	 
+//		});
+	  }
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
@@ -70,6 +101,12 @@ public class ContactFragment extends Fragment
 		btnSave = (Button)v.findViewById(R.id.btn_saveContact);
 		btnEdit = (Button)v.findViewById(R.id.btn_EditContact);
 		editContactButtonListener();
+		roleSpinner = (Spinner) v.findViewById(R.id.project_role_spinner);
+		// Create an ArrayAdapter using the string array and a default spinner layout
+		List<String> projectRolesList = WorkLoad.getInstance().getAllProjectRoles(Integer.parseInt(getActivity().getIntent().getStringExtra("PROJECTID")));
+		ArrayAdapter<String> projectRoleArrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, projectRolesList);
+		projectRoleArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		roleSpinner.setAdapter(projectRoleArrayAdapter);
 //		if(viewContact)
 //		{
 			btnSave.setVisibility(View.GONE);
