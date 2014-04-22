@@ -26,9 +26,6 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	public static final String projectContactsID = "projectContactsID";
 	public static final String ContactsTable = "ContactsTable";
 	public static final String ContactID = "ContactID";
-	public static final String ContactName = "ContactName";
-	public static final String ContactNumber = "ContactNumber";
-	public static final String ContactEmail = "ContactEmail";
 	public static final String ContactProjectID = "ContactProjectID";
 	
 	public static final String MeetingsTable = "MeetingsTable";
@@ -256,27 +253,31 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	
 	public void addContactToDB(Contact contact)
 	{
-		
+		if(doesContactExist(contact))
+		{
+			Log.i(WorkLoad.TAG,"contact does Exist BLAD!");
+		}
+		else
+		{
 		ContentValues cv1 = new ContentValues();
 		cv1.put(ContactID, contact.getContactID());
 		Log.i(WorkLoad.TAG, "contact ID is "+contact.getContactID());
-		cv1.put(ContactName, contact.getName());
-		cv1.put(ContactNumber, contact.getNumber());
-		cv1.put(ContactEmail, contact.getEmail());
 		cv1.put(ContactProjectID, contact.getProjectID());
 		Log.i(WorkLoad.TAG, "project id JUST BEFORE ENTERING INTO DB IS "+contact.getProjectID());
 		getWritableDatabase().insert(ContactsTable,null,cv1);
 		
 		Log.i(WorkLoad.TAG, "Entered contact into DB with values name/projectID = "+contact.getName()+"/"+contact.getProjectID());
+		}
 	}
 	
 	public boolean doesContactExist(Contact contact)
 	{
 		boolean contactExists = false;
+		Log.i(WorkLoad.TAG, "Contact id and project id are "+contact.getContactID()+" "+contact.getProjectID());
 		SQLiteDatabase db = this.getReadableDatabase();
-		Cursor cursor = db.rawQuery("SELECT * FROM "+ContactsTable+" WHERE "+ContactID+" =? AND "+ContactProjectID+" =?",new String[]{contact.getContactID(), contact.getProjectID()});
+		Cursor cursor = db.rawQuery("SELECT * FROM "+ContactsTable+" WHERE "+ContactID+" = ? AND "+ContactProjectID+" = ?",new String[]{contact.getContactID(), contact.getProjectID()});
 		cursor.moveToFirst();
-		if(cursor.equals(null))
+		if(cursor.getCount() == 0)
 		{
 			contactExists = false;
 		}
@@ -328,15 +329,19 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 		db.close();
 		return imageURLs;
 	}
+
+	public void deleteContact(Contact contact)
+	{
+		String contactID = contact.getContactID();
+		String contactProjectID = contact.getProjectID();
+		SQLiteDatabase db = this.getWritableDatabase();
+		db.delete(ContactsTable, ContactID+" = ? AND "+ContactProjectID+" = ?", new String[] {contactID,contactProjectID});
+		
+		Log.i(WorkLoad.TAG, "ToDoItem has been deleted");
+		
+	}
 	
-//	private Contact createContact(Cursor cursor)
-//	{
-//		
-//		String cID = cursor.getString(1);
-//		Log.i(WorkLoad.TAG, "Create contact method - contact id is - "+cID);
-//		Contact contact = new Contact(cID,name,number,email);
-//		return contact;
-//	}
+
 	
 	
 	

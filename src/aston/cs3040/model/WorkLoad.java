@@ -237,4 +237,10 @@ public class WorkLoad {
 	{
 		return dbHelper.getAllProjectImages(projectID);
 	}
+
+	public void deleteContact(Contact contact)
+	{
+		dbHelper.deleteContact(contact);
+		
+	}
 }
