@@ -101,12 +101,7 @@ public class ContactFragment extends Fragment
 		btnSave = (Button)v.findViewById(R.id.btn_saveContact);
 		btnEdit = (Button)v.findViewById(R.id.btn_EditContact);
 		editContactButtonListener();
-		roleSpinner = (Spinner) v.findViewById(R.id.project_role_spinner);
-		// Create an ArrayAdapter using the string array and a default spinner layout
-		List<String> projectRolesList = WorkLoad.getInstance().getAllProjectRoles(Integer.parseInt(getActivity().getIntent().getStringExtra("PROJECTID")));
-		ArrayAdapter<String> projectRoleArrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, projectRolesList);
-		projectRoleArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		roleSpinner.setAdapter(projectRoleArrayAdapter);
+		updateProjectRoleSpinner();
 //		if(viewContact)
 //		{
 			btnSave.setVisibility(View.GONE);
@@ -166,6 +161,20 @@ public class ContactFragment extends Fragment
 		return v;
 	}
 	
+	private void updateProjectRoleSpinner()
+	{
+		roleSpinner = (Spinner) v.findViewById(R.id.project_role_spinner);
+		// Create an ArrayAdapter using the string array and a default spinner layout
+		//List<String> projectRolesList = WorkLoad.getInstance().getAllProjectRoles(Integer.parseInt(getActivity().getIntent().getStringExtra("PROJECTID")));
+		List<String> projectRolesList = WorkLoad.getInstance().getAllGenericRoles();
+		ArrayAdapter<String> projectRoleArrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, projectRolesList);
+		projectRoleArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		roleSpinner.setAdapter(projectRoleArrayAdapter);
+		
+	}
+	
+	
+
 	private void checkIfSaveable()
 	{
 		if(!TextUtils.isEmpty(contactEmailAddress.getText().toString())

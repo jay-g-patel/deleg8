@@ -144,13 +144,17 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	private void insertInitialRoles(SQLiteDatabase db)
 	{
 		ContentValues cv1 = new ContentValues();
-		cv1.put(ProjectRole_ProjectID, 1);
-		cv1.put(ProjectRole_Description, "TeamLeader");
+		cv1.put(ProjectRole_ProjectID, 0);
+		cv1.put(ProjectRole_Description, "Team Leader");
 		long ToDoItemOneId = db.insert(ProjectRolesTable, ProjectRoleID, cv1);
 		
-		cv1.put(ProjectRole_ProjectID, 1);
+		cv1.put(ProjectRole_ProjectID, 0);
 		cv1.put(ProjectRole_Description, "photographer");
 		long ToDoItemTwoId = db.insert(ProjectRolesTable, ProjectRoleID, cv1);
+		
+		cv1.put(ProjectRole_ProjectID, 0);
+		cv1.put(ProjectRole_Description, "Team Member");
+		long ToDoItemThreeId = db.insert(ProjectRolesTable, ProjectRoleID, cv1);
 	}
 	
 	private void insertInitialToDoItems(SQLiteDatabase db)
@@ -412,7 +416,23 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 		return projectRoles;
 	}
 	
-
+	public ArrayList<String> getAllGenericRoles()
+	{
+		SQLiteDatabase db = this.getReadableDatabase();
+		Log.i(WorkLoad.TAG, "project id to get images is - "+projectID);
+		Cursor cursor = db.rawQuery("SELECT * FROM "+ ProjectRolesTable+" WHERE "+ProjectRole_ProjectID+" = ?",new String[]{String.valueOf(0)});
+		ArrayList<String> projectRoles = new ArrayList<String>();
+		cursor.moveToFirst();
+		while(!cursor.isAfterLast())
+		{
+			String rDescipt = cursor.getString(2);
+			projectRoles.add(rDescipt);
+			cursor.moveToNext();
+		}
+		cursor.close();
+		db.close();
+		return projectRoles;
+	}
 	
 	
 	
