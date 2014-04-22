@@ -32,6 +32,7 @@ public class AppContactsListFragment extends ListFragment
 	
 	private ContactsArrayAdapter adapter;
 	private String contactListProjectID = "";
+	private Contact contact = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -165,7 +166,7 @@ public class AppContactsListFragment extends ListFragment
 				convertView = getActivity().getLayoutInflater().inflate(
 						R.layout.list_layout_project, null);
 			}
-			Contact contact = items.get(position);
+			contact = items.get(position);
 			Log.i(WorkLoad.TAG, "adding item at pos " + position);
 			Log.i(WorkLoad.TAG, "item at pos "+position+ " is contact "+contact.getContactID());
 
@@ -174,47 +175,47 @@ public class AppContactsListFragment extends ListFragment
 			titleTextView.setText(contact.getName());
 			
 			
-//			getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
-//				@Override
-//				public boolean onItemLongClick(AdapterView<?>list, View v,int pos, long id){
-//					projectToDelete = (Project)list.getItemAtPosition(pos);
-//					Log.i(WorkLoad.TAG,"I'm gonna show the dialogue :)");
-//					showDeleteConfirmAlert();
-//					Log.i(WorkLoad.TAG,"orrr maybe im not");
-//					return true;
-//				}
-//
-//				private void showDeleteConfirmAlert() {
-//					// TODO Auto-generated method stub
-//					Log.i(WorkLoad.TAG,"in the dialogue Method");
-//					AlertDialog.Builder confirmDelete = new AlertDialog.Builder(getActivity());
-//					confirmDelete.setMessage("Are you sure you want to delete " + projectToDelete.getName()+"?");
-//					confirmDelete.setCancelable(true);
-//					confirmDelete.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-//						
-//						@Override
-//						public void onClick(DialogInterface dialog, int which) {
-//							// This is what you need to do when you press okay
-//							WorkLoad.getInstance().deleteProjectByID(projectToDelete);
-//							Intent i = new Intent(getActivity(), ProjectListActivity.class);
-//							getActivity().finish();
-//							startActivity(i);
-//						}
-//					});
-//					
-//					confirmDelete.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-//						
-//						@Override
-//						public void onClick(DialogInterface dialog, int which) {
-//							// This is what to do when user hits cancel
-//							
-//							
-//						}
-//					});
-//					
-//					confirmDelete.show();
-//				}
-//				});
+			getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
+				@Override
+				public boolean onItemLongClick(AdapterView<?>list, View v,int pos, long id){
+					contact = (Contact)list.getItemAtPosition(pos);
+					Log.i(WorkLoad.TAG,"I'm gonna show the dialogue :)");
+					showDeleteConfirmAlert();
+					Log.i(WorkLoad.TAG,"orrr maybe im not");
+					return true;
+				}
+
+				private void showDeleteConfirmAlert() {
+					// TODO Auto-generated method stub
+					Log.i(WorkLoad.TAG,"in the dialogue Method");
+					AlertDialog.Builder confirmDelete = new AlertDialog.Builder(getActivity());
+					confirmDelete.setMessage("Are you sure you want to delete " + contact.getName()+"?");
+					confirmDelete.setCancelable(true);
+					confirmDelete.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+						
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							// This is what you need to do when you press okay
+							WorkLoad.getInstance().deleteContact(contact);
+							Intent i = new Intent(getActivity(), AppContactsListActivity.class);
+							getActivity().finish();
+							startActivity(i);
+						}
+					});
+					
+					confirmDelete.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+						
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							// This is what to do when user hits cancel
+							
+							
+						}
+					});
+					
+					confirmDelete.show();
+				}
+				});
 			return convertView;
 
 		}
