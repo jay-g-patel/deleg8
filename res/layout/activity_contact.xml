@@ -24,26 +24,48 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="34dp"
-       android:inputType="phone" />
+        android:inputType="phone" />
 
     <EditText
         android:id="@+id/contactEmail_EditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-       	android:layout_marginTop="34dp"
+        android:layout_marginTop="34dp"
         android:inputType="textEmailAddress" />
 
-    <Spinner
-    android:id="@+id/project_role_spinner"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content" />
+    <LinearLayout
+    android:id="@+id/horizontal_contact_role_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" >
+
+    <TextView
+        android:id="@+id/contactRole_TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:text="CONTACT ROLE!" />
+
+    <Button
+        android:id="@+id/contactRole_button"
+        android:layout_width="159dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="Change contact role" />
+    </LinearLayout>
     
+    <TextView
+        android:id="@+id/spacer1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="34dp" />
+
     <Button
         android:id="@+id/btn_EditContact"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/edit_to_do_item" />
-    
+
     <Button
         android:id="@+id/btn_saveContact"
         android:layout_width="wrap_content"

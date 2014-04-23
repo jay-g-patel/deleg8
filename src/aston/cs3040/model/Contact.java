@@ -10,6 +10,7 @@ public class Contact
 	private String name;
 	private String number;
 	private String email;
+	private Role role;
 	
 	public Contact(String id, String name, String number, String email, String proID)
 	{
@@ -73,6 +74,16 @@ public class Contact
 	public void setProjectID(String projectID)
 	{
 		this.projectID = projectID;
+	}
+
+	public Role getRole()
+	{
+		return role;
+	}
+
+	public void setRole(Role role)
+	{
+		this.role = role;
 	}
 	
 }

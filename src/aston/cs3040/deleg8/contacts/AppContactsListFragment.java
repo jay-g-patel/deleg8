@@ -132,6 +132,7 @@ public class AppContactsListFragment extends ListFragment
 		Intent i = new Intent(getActivity(),ContactActivity.class);
 		i.putExtra("CONTACT_ID", c.getContactID());
 		i.putExtra("PROJECTID",c.getProjectID());
+		
 		i.putExtra("CONTACT_NUMBER", c.getNumber());
 		i.putExtra("CONTACT_EMAIL", c.getEmail());
 		i.putExtra("VIEW_CONTACT", true);

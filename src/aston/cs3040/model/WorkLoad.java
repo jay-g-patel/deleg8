@@ -255,8 +255,13 @@ public class WorkLoad {
 		return dbHelper.getAllProjectRoles(projectID);
 	}
 	
-	public ArrayList<String> getAllGenericRoles()
+	public Role[] getAllGenericRoles()
 	{
 		return dbHelper.getAllGenericRoles();
+	}
+	
+	public String getContactProjectRoleDescription(int projectID, int contactID)
+	{
+		return dbHelper.getContactProjectRoleDescription(projectID, contactID);
 	}
 }

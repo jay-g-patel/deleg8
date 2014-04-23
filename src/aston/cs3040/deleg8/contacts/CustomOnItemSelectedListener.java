@@ -1,9 +1,11 @@
 package aston.cs3040.deleg8.contacts;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Toast;
+import aston.cs3040.model.WorkLoad;
 
 public class CustomOnItemSelectedListener implements OnItemSelectedListener
 {
@@ -15,6 +17,7 @@ public class CustomOnItemSelectedListener implements OnItemSelectedListener
 		Toast.makeText(parent.getContext(), 
 				"OnItemSelectedListener : " + parent.getItemAtPosition(pos).toString(),
 				Toast.LENGTH_SHORT).show();
+		
 
 	}
 

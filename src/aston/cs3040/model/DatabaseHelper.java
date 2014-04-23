@@ -31,7 +31,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	public static final String ContactsTable = "ContactsTable";
 	public static final String ContactID = "ContactID";
 	public static final String ContactProjectID = "ContactProjectID";
-	public static final String ContactProjectRole = "ContactProjectRole";
+	public static final String ContactProjectRoleID = "ContactProjectRoleID";
 	
 	public static final String MeetingsTable = "MeetingsTable";
 	public static final String INCMeetingID = "INCMeetingID";
@@ -49,9 +49,9 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	public static final String ProjectRole_ProjectID = "ProjectRole_ProjectID";
 	public static final String ProjectRole_Description = "ProjectRole_ProjectDescription";
 	
-	public static final String ProjectContactRoleTable = "ProjectContactRoleTable";
-	public static final String ProjectContactRole_ProjectRoleID = "ProjectContactRole_ProjectRoleID";
-	public static final String ProjectContactRole_ProjectContactID = "ProjectContactRole_ProjectContactID";
+//	public static final String ProjectContactRoleTable = "ProjectContactRoleTable";
+//	public static final String ProjectContactRole_ProjectRoleID = "ProjectContactRole_ProjectRoleID";
+//	public static final String ProjectContactRole_ProjectContactID = "ProjectContactRole_ProjectContactID";
 
 	public DatabaseHelper(Context context) {
 		super(context, DBNAME, null, 1);
@@ -70,21 +70,21 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 		String sqlmeetings = "CREATE TABLE " + MeetingsTable + 
 				" ("+EventID+" LONG, "+ MeetingProjectID+" INTEGER)";
 		String sqlContacts =  "CREATE TABLE " + ContactsTable + 
-				" ("+projectContactsID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+ContactID+" STRING, "+ContactProjectID+" String, "+ContactProjectRole+" STRING)";
+				" ("+projectContactsID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+ContactID+" STRING, "+ContactProjectID+" String, "+ContactProjectRoleID+" Integer)";
 		String sqlImages = "CREATE TABLE " + ImagesTable + 
 				" ("+ImageID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+ ImageURL+ " TEXT, "+ImageProjectID+" INTEGER)";
 		String sqlProjectRoles = "CREATE TABLE " + ProjectRolesTable + 
 				" ("+ProjectRoleID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+ ProjectRole_ProjectID+ " INTEGER, "+ProjectRole_Description+" String)";
-		String sqlProjectContactRoles = "CREATE TABLE " + ProjectContactRoleTable + 
-				" ("+ProjectContactRole_ProjectContactID + " INTEGER PRIMARY KEY, "+ ProjectContactRole_ProjectRoleID+ " INTEGER)";
-		
+//		String sqlProjectContactRoles = "CREATE TABLE " + ProjectContactRoleTable + 
+//				" ("+ProjectContactRole_ProjectContactID + " INTEGER PRIMARY KEY, "+ ProjectContactRole_ProjectRoleID+ " INTEGER)";
+//		
 		db.execSQL(sql);
 		db.execSQL(sql1);
 		db.execSQL(sqlmeetings);
 		db.execSQL(sqlContacts);
 		db.execSQL(sqlImages);
 		db.execSQL(sqlProjectRoles);
-		db.execSQL(sqlProjectContactRoles);
+//		db.execSQL(sqlProjectContactRoles);
 		
 		insertInitialProjects(db);
 		insertInitialRoles(db);
@@ -294,6 +294,17 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 		if(doesContactExist(contact))
 		{
 			Log.i(WorkLoad.TAG,"contact does Exist BLAD!");
+			//check the contact role here, if it is the same as the one already against it then do nothing
+			if(hasContactRoleChanged(contact))
+			{
+				SQLiteDatabase db = this.getWritableDatabase();
+				
+				ContentValues cv1 = new ContentValues();
+				cv1.put(ContactProjectRoleID, contact.getRole().getProjectRoleID());
+				
+				db.update(ContactsTable, cv1, ContactID+" = ? AND "+ContactProjectID+" = ?",new String[]{contact.getContactID(), contact.getProjectID()});
+			}
+			//else update the contact with the new role
 		}
 		else
 		{
@@ -302,10 +313,32 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 		Log.i(WorkLoad.TAG, "contact ID is "+contact.getContactID());
 		cv1.put(ContactProjectID, contact.getProjectID());
 		Log.i(WorkLoad.TAG, "project id JUST BEFORE ENTERING INTO DB IS "+contact.getProjectID());
+		cv1.put(ContactProjectRoleID, contact.getRole().getProjectRoleID());
 		getWritableDatabase().insert(ContactsTable,null,cv1);
 		
 		Log.i(WorkLoad.TAG, "Entered contact into DB with values name/projectID = "+contact.getName()+"/"+contact.getProjectID());
 		}
+	}
+	
+	public boolean hasContactRoleChanged(Contact contact)
+	{
+		boolean hasContactRoleChanged = false;
+		
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.rawQuery("SELECT * FROM "+ContactsTable+" WHERE "+ContactID+" = ? AND "+ContactProjectID+" = ?",new String[]{contact.getContactID(), contact.getProjectID()});
+		cursor.moveToFirst();
+		String currentRole = cursor.getString(3);
+		String role = contact.getRole().getRoleDescription();
+		if(currentRole.equalsIgnoreCase(contact.getRole().getRoleDescription()))
+		{
+			hasContactRoleChanged = false;
+		}
+		else
+		{
+			hasContactRoleChanged = true;
+		}
+	
+		return hasContactRoleChanged;
 	}
 	
 	public boolean doesContactExist(Contact contact)
@@ -416,22 +449,58 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 		return projectRoles;
 	}
 	
-	public ArrayList<String> getAllGenericRoles()
+	public Role[] getAllGenericRoles()
 	{
 		SQLiteDatabase db = this.getReadableDatabase();
 		Log.i(WorkLoad.TAG, "project id to get images is - "+projectID);
 		Cursor cursor = db.rawQuery("SELECT * FROM "+ ProjectRolesTable+" WHERE "+ProjectRole_ProjectID+" = ?",new String[]{String.valueOf(0)});
-		ArrayList<String> projectRoles = new ArrayList<String>();
+		//ArrayList<Role> projectRoles = new ArrayList<Role>();
+		Role[] projectRoles = new Role[cursor.getCount()];
 		cursor.moveToFirst();
+		int i=0;
 		while(!cursor.isAfterLast())
 		{
+			
+			int pRoleId = cursor.getInt(0);
+			int pId = cursor.getInt(1);
 			String rDescipt = cursor.getString(2);
-			projectRoles.add(rDescipt);
+			Role tmpRole = new Role(pRoleId,pId,rDescipt);
+			projectRoles[i] = tmpRole;
 			cursor.moveToNext();
+			i++;
 		}
 		cursor.close();
 		db.close();
 		return projectRoles;
+	}
+
+	public String getContactProjectRoleDescription(int projectID,
+			int contactID)
+	{
+	 
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.rawQuery("SELECT "+ContactProjectRoleID +" FROM "+ ContactsTable+" WHERE "+ContactProjectID+" = ? AND "+ContactID+" = ?",new String[]{String.valueOf(projectID), String.valueOf(contactID)});
+		int pCID = 0;
+		cursor.moveToFirst();
+		if(!cursor.isAfterLast())
+		{
+			pCID = cursor.getInt(0);
+			
+		}
+		cursor.close();
+		
+		Cursor cursor1 = db.rawQuery("SELECT "+ProjectRole_Description +" FROM "+ ProjectRolesTable+" WHERE "+ProjectRoleID+" = ?",new String[]{String.valueOf(pCID)});
+		String ProjectRoleDescription = "";
+		cursor1.moveToFirst();
+		if(!cursor.isAfterLast())
+		{
+			ProjectRoleDescription = cursor1.getString(0);
+			
+		}
+		cursor1.close();
+		
+		return ProjectRoleDescription;
+		
 	}
 	
 	

@@ -5,9 +5,12 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import android.app.AlertDialog;
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderOperation.Builder;
 import android.content.ContentUris;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -26,6 +29,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import aston.cs3040.deleg8.R;
 import aston.cs3040.deleg8.ToDoListActivity;
 import aston.cs3040.model.Contact;
@@ -38,13 +42,17 @@ public class ContactFragment extends Fragment
 	EditText contactName;
 	EditText contactNumber;
 	EditText contactEmailAddress;
+	TextView contactRole;
+	Button contactRoleChangeButton;
 	Button btnSave;
 	Button btnEdit;
 	String cID = "";
-	String proID = "";
+	int proID = 0;
+	Role roll = null;
+	int contactRoleID = 0;
 	boolean emailUpdate = false;
 	boolean numberUpdate = false;
-	Spinner roleSpinner = null;
+	//Spinner roleSpinner = null;
 
 	public void onCreate(Bundle savedInstanceState)
 	{		
@@ -54,39 +62,17 @@ public class ContactFragment extends Fragment
 		{
 			cID = getActivity().getIntent().getStringExtra("CONTACT_ID");
 		}
-		if(getActivity().getIntent().getStringExtra("PROJECTID").isEmpty())
+		if(!getActivity().getIntent().getStringExtra("PROJECTID").isEmpty())
 		{
-			proID = getActivity().getIntent().getStringExtra("PROJECTID");
+			proID = Integer.parseInt(getActivity().getIntent().getStringExtra("PROJECTID"));
+			Log.i(WorkLoad.TAG, "projectID is "+getActivity().getIntent().getStringExtra("PROJECTID"));
+			
 		}
 		
 
 	}
 	
-	public void addListenerOnSpinnerItemSelection() {
-		roleSpinner = (Spinner)v.findViewById(R.id.project_role_spinner);
-		roleSpinner.setOnItemSelectedListener(new CustomOnItemSelectedListener());
-	  }
-
-	public void addListenerOnButton() {
-		 
-		roleSpinner = (Spinner) v.findViewById(R.id.project_role_spinner);
-//		btnSubmit = (Button) findViewById(R.id.btnSubmit);
-//	 
-//		btnSubmit.setOnClickListener(new OnClickListener() {
-//	 
-//		  @Override
-//		  public void onClick(View v) {
-//	 
-//		    Toast.makeText(MyAndroidAppActivity.this,
-//			"OnClickListener : " + 
-//	                "\nSpinner 1 : "+ String.valueOf(spinner1.getSelectedItem()) + 
-//	                "\nSpinner 2 : "+ String.valueOf(spinner2.getSelectedItem()),
-//				Toast.LENGTH_SHORT).show();
-//		  }
-//	 
-//		});
-	  }
-
+//	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
 		v = inflater.inflate(R.layout.activity_contact,  parent, false);
@@ -98,10 +84,15 @@ public class ContactFragment extends Fragment
 		contactName = (EditText)v.findViewById(R.id.contactName_editText);
 		contactNumber = (EditText)v.findViewById(R.id.contactNumber_EditText);
 		contactEmailAddress = (EditText)v.findViewById(R.id.contactEmail_EditText);
+		contactRole = (TextView)v.findViewById(R.id.contactRole_TextView);
+		contactRoleChangeButton = (Button)v.findViewById(R.id.contactRole_button);
 		btnSave = (Button)v.findViewById(R.id.btn_saveContact);
 		btnEdit = (Button)v.findViewById(R.id.btn_EditContact);
 		editContactButtonListener();
-		updateProjectRoleSpinner();
+//		updateProjectRoleSpinner();
+		contactRoleOnClickListener();
+		
+		
 //		if(viewContact)
 //		{
 			btnSave.setVisibility(View.GONE);
@@ -120,6 +111,13 @@ public class ContactFragment extends Fragment
 		contactName.setText(getActivity().getIntent().getStringExtra("CONTACT_NAME"));
 		contactNumber.setText(getActivity().getIntent().getStringExtra("CONTACT_NUMBER"));
 		contactEmailAddress.setText(getActivity().getIntent().getStringExtra("CONTACT_EMAIL"));
+		Log.i(WorkLoad.TAG, "cID and proID =  "+cID+ " "+proID);
+		if(!cID.equals("") && proID !=0)
+		{
+			String initialProjectRoleDescription = WorkLoad.getInstance().getContactProjectRoleDescription(proID, Integer.parseInt(cID));
+			contactRole.setText(initialProjectRoleDescription);
+			Log.i(WorkLoad.TAG, "project role is - "+initialProjectRoleDescription);
+		}
 		
 		
 		if(getActivity().getIntent().getStringExtra("CONTACT_EMAIL").equals(""))
@@ -161,19 +159,33 @@ public class ContactFragment extends Fragment
 		return v;
 	}
 	
-	private void updateProjectRoleSpinner()
+private void updateProjectRoleAlert()
+{
+	final Role[] items = WorkLoad.getInstance().getAllGenericRoles();
+	ArrayList<String> roleDescriptions = new ArrayList<String>();
+	for(Role r:items)
 	{
-		roleSpinner = (Spinner) v.findViewById(R.id.project_role_spinner);
-		// Create an ArrayAdapter using the string array and a default spinner layout
-		//List<String> projectRolesList = WorkLoad.getInstance().getAllProjectRoles(Integer.parseInt(getActivity().getIntent().getStringExtra("PROJECTID")));
-		List<String> projectRolesList = WorkLoad.getInstance().getAllGenericRoles();
-		ArrayAdapter<String> projectRoleArrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, projectRolesList);
-		projectRoleArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		roleSpinner.setAdapter(projectRoleArrayAdapter);
-		
+		roleDescriptions.add(r.getRoleDescription());
 	}
+	ArrayAdapter<String> arr=new ArrayAdapter<String>
+	(getActivity(), android.R.layout.select_dialog_item,roleDescriptions);
 	
+	AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
+	builder.setTitle("Adapter alert");
+
+	builder.setAdapter(arr, new OnClickListener() {
+
+	@Override
+	public void onClick(DialogInterface dialog, int which) {
+	// TODO Auto-generated method stub
+	contactRole.setText(items[which].getRoleDescription());
+	roll = items[which];
+	Log.i(WorkLoad.TAG,"Role Description and ids are - "+items[which].getProjectRoleID()+" "+items[which].getRoleDescription());
+	}
+	});
+	builder.show();
 	
+}
 
 	private void checkIfSaveable()
 	{
@@ -193,7 +205,6 @@ public class ContactFragment extends Fragment
 	
 	public void editContactButtonListener()
 	{
-		//Log.i(WorkLoad.TAG, "Listener hit ");	
 		btnEdit.setVisibility(View.VISIBLE);
 		btnEdit.setOnClickListener(new View.OnClickListener()
 		{
@@ -205,7 +216,6 @@ public class ContactFragment extends Fragment
 				Uri contactURI = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, l);
 				i.setData(contactURI);
 				
-				//startActivity(i);
 				i.putExtra("finishActivityOnSaveCompleted", true);
 				startActivityForResult(i, 2000);
 			}
@@ -266,11 +276,27 @@ public class ContactFragment extends Fragment
 				
 				Contact newContact = new Contact(cID, cName, cNumber, cEmail, projectID);
 				Log.i(WorkLoad.TAG, "Created project ID is "+newContact.getProjectID());
-				
+				newContact.setRole(roll);
 				WorkLoad.getInstance().addContactToDB(newContact);
 				Intent i = new Intent(getActivity(), AppContactsListActivity.class);
 				i.putExtra("PROJECTID",projectID);
 				startActivity(i);
+
+				
+			}
+		});
+	}
+	
+	private void contactRoleOnClickListener()
+	{
+		contactRoleChangeButton.setOnClickListener(new View.OnClickListener()
+		{
+			
+			@Override
+			public void onClick(View v)
+			{
+				Log.i(WorkLoad.TAG, "contact role thingy has been clicked!");
+				updateProjectRoleAlert();
 				
 				
 			}
