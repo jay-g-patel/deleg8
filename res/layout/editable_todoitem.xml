@@ -14,6 +14,25 @@
 	    android:hint="@string/app_name">
     </EditText>
     
+	<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" >
+	
+	 <TextView
+        android:id="@+id/ToDoItemCompletionDate_TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="To Be Completed By " />
+
+	 <Button
+	     android:id="@+id/editToDoCompletionDate"
+	     android:layout_width="wrap_content"
+	     android:layout_height="wrap_content"
+	     android:text="Set Completion Date" />
+	 
+	 </LinearLayout>
+    
     <Button
        android:id="@+id/add_toDoItem_button"
        android:layout_width="wrap_content"

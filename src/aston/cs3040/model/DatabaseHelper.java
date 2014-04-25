@@ -26,6 +26,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	public static final String ToDoListItemTable = "ToDoListItemTable";
 	public static final String ToDoItemID = "ToDoItemID";
 	public static final String ToDoItemName = "ToDoItemName";
+	public static final String ToDoItemDeadline = "ToDoItemDeadline";
 	
 	public static final String projectContactsID = "projectContactsID";
 	public static final String ContactsTable = "ContactsTable";
@@ -48,10 +49,6 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	public static final String ProjectRoleID = "ProjectRoleID";
 	public static final String ProjectRole_ProjectID = "ProjectRole_ProjectID";
 	public static final String ProjectRole_Description = "ProjectRole_ProjectDescription";
-	
-//	public static final String ProjectContactRoleTable = "ProjectContactRoleTable";
-//	public static final String ProjectContactRole_ProjectRoleID = "ProjectContactRole_ProjectRoleID";
-//	public static final String ProjectContactRole_ProjectContactID = "ProjectContactRole_ProjectContactID";
 
 	public DatabaseHelper(Context context) {
 		super(context, DBNAME, null, 1);
@@ -66,7 +63,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 		String sql = "CREATE TABLE " + projectTable + 
 				" ("+projectID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+ projectName+ " TEXT)";
 		String sql1 = "CREATE TABLE " + ToDoListItemTable + 
-				" ("+ToDoItemID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+ ToDoItemName+ " TEXT, "+projectID+ " INTEGER)";
+				" ("+ToDoItemID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+ ToDoItemName+ " TEXT, "+projectID+ " INTEGER, "+ToDoItemDeadline+" STRING)";
 		String sqlmeetings = "CREATE TABLE " + MeetingsTable + 
 				" ("+EventID+" LONG, "+ MeetingProjectID+" INTEGER)";
 		String sqlContacts =  "CREATE TABLE " + ContactsTable + 
@@ -102,6 +99,8 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 		ContentValues cv1 = new ContentValues();
 		cv1.put(ToDoItemName, tdi.getName());
 		cv1.put(projectID, tdi.getProjectid());
+		cv1.put(ToDoItemDeadline, tdi.getCompletionDate());
+		Log.i(WorkLoad.TAG, "completion Date od inserted item is "+tdi.getCompletionDate());
 		return getWritableDatabase().insert(ToDoListItemTable, null, cv1);
 	}
 	
@@ -243,10 +242,12 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 		int tdlID = cursor.getInt(0);
 		String name = cursor.getString(1);
 		int pid = cursor.getInt(2); 
+		String tdiDate = cursor.getString(3);
 		ToDoItem tmpTDI = new ToDoItem();
 		tmpTDI.setName(name);
 		tmpTDI.setID(tdlID);
 		tmpTDI.setProjectID(pid);
+		tmpTDI.setCompletionDate(tdiDate);
 		return tmpTDI;
 	}
 
@@ -255,6 +256,8 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 		
 		ContentValues cv1 = new ContentValues();
 		cv1.put(ToDoItemName, toDoItem.getName());
+		cv1.put(ToDoItemDeadline, toDoItem.getCompletionDate());
+		Log.i(WorkLoad.TAG, "Completion Date entered into db is - "+toDoItem.getCompletionDate());
 		
 		db.update(ToDoListItemTable, cv1, ToDoItemID+" = ?", new String[] {String.valueOf(toDoItem.getId())});
 		

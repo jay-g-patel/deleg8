@@ -1,6 +1,7 @@
 package aston.cs3040.model;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 
 public class ToDoItem implements Serializable{
@@ -11,7 +12,7 @@ public class ToDoItem implements Serializable{
 	public int id = 0;
 	public String name = null;
 	public boolean completed = false;
-	public Date completionDate = null;
+	public String completionDate = "";
 	public String description = null;
 	public int projectID = 0;
 	
@@ -19,11 +20,11 @@ public class ToDoItem implements Serializable{
 	{
 		this.name = "";
 		this.completed = false;
-		this.completionDate = new Date();
+		this.completionDate = "";
 		this.description = "";
 	}
 	
-	public ToDoItem(String name, Date completionDate, String description)
+	public ToDoItem(String name, String completionDate, String description)
 	{
 		this.name = name;
 		this.completionDate = completionDate;
@@ -34,7 +35,7 @@ public class ToDoItem implements Serializable{
 	public ToDoItem(String name)
 	{
 		this.name = name;
-		this.completionDate = new Date();
+		this.completionDate = "";
 		this.description = "";
 		this.completed = false;
 	}
@@ -65,11 +66,11 @@ public class ToDoItem implements Serializable{
 		this.completed = completed;
 	}
 
-	public Date getCompletionDate() {
+	public String getCompletionDate() {
 		return completionDate;
 	}
-
-	public void setCompletionDate(Date completionDate) {
+	
+	public void setCompletionDate(String completionDate) {
 		this.completionDate = completionDate;
 	}
 

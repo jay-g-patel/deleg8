@@ -14,13 +14,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/hello_world" />
-
-  
-    <Button
-        android:id="@+id/editToDoItemBtn"
+    
+    <TextView
+        android:id="@+id/ToDoItemCompletionDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/edit_to_do_item" />
+        android:text="Completion Date has not yet been set" />
+    
+   
     
    
 

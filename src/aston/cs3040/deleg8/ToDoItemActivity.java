@@ -20,14 +20,14 @@ import aston.cs3040.model.WorkLoad;
 public class ToDoItemActivity extends SingleFragmentActivity {
 
 	private ToDoItem tdi;
-	
+	boolean editMode = false;
 	
 	@Override
 	protected Fragment createFragment() {
 		Fragment f = null;
 		tdi = (ToDoItem) getIntent().getExtras().get("TODOITEM");
 		boolean isNew = getIntent().getBooleanExtra("ISNEW", false);
-		boolean editMode = getIntent().getBooleanExtra("MODE", false);
+		editMode = getIntent().getBooleanExtra("MODE", false);
 		
 		if(isNew || editMode)
 		{
@@ -45,8 +45,10 @@ public class ToDoItemActivity extends SingleFragmentActivity {
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
 		MenuInflater inflater = getMenuInflater();
+		if(!editMode)
+		{
 		inflater.inflate(R.menu.project_actions, menu);
-		inflater.inflate(R.menu.meeting_list_menu, menu);
+		}
 		
 		
 		return super.onCreateOptionsMenu(menu);
@@ -67,9 +69,6 @@ public class ToDoItemActivity extends SingleFragmentActivity {
 		case R.id.action_editProject:
 			EditProject();
 			return true;
-//		case R.id.action_addMeeting:
-//			AddMeeting();
-//			return true;
 		}
 		return false;
 	}
