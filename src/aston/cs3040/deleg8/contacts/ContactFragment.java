@@ -1,22 +1,19 @@
 package aston.cs3040.deleg8.contacts;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.app.AlertDialog;
-import android.content.ContentProviderOperation;
-import android.content.ContentProviderOperation.Builder;
 import android.content.ContentUris;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.provider.ContactsContract.RawContacts;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -27,11 +24,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 import aston.cs3040.deleg8.R;
-import aston.cs3040.deleg8.ToDoListActivity;
 import aston.cs3040.model.Contact;
 import aston.cs3040.model.Role;
 import aston.cs3040.model.WorkLoad;
@@ -39,9 +33,9 @@ import aston.cs3040.model.WorkLoad;
 public class ContactFragment extends Fragment
 {
 	private View v;
-	EditText contactName;
-	EditText contactNumber;
-	EditText contactEmailAddress;
+	TextView contactName;
+	TextView contactNumber;
+	TextView contactEmailAddress;
 	TextView contactRole;
 	Button contactRoleChangeButton;
 	Button btnSave;
@@ -81,9 +75,9 @@ public class ContactFragment extends Fragment
 		Log.i(WorkLoad.TAG, "view contact is "+viewContact);
 		Log.i(WorkLoad.TAG, "import contact is "+importContact);
 		boolean fromPhoneContacts = getActivity().getIntent().getBooleanExtra("SELECTED_FROM_PHONE_LIST", false);
-		contactName = (EditText)v.findViewById(R.id.contactName_editText);
-		contactNumber = (EditText)v.findViewById(R.id.contactNumber_EditText);
-		contactEmailAddress = (EditText)v.findViewById(R.id.contactEmail_EditText);
+		contactName = (TextView)v.findViewById(R.id.contactName_editText);
+		contactNumber = (TextView)v.findViewById(R.id.contactNumber_EditText);
+		contactEmailAddress = (TextView)v.findViewById(R.id.contactEmail_EditText);
 		contactRole = (TextView)v.findViewById(R.id.contactRole_TextView);
 		contactRoleChangeButton = (Button)v.findViewById(R.id.contactRole_button);
 		btnSave = (Button)v.findViewById(R.id.btn_saveContact);
@@ -96,9 +90,6 @@ public class ContactFragment extends Fragment
 //		if(viewContact)
 //		{
 			btnSave.setVisibility(View.GONE);
-			contactName.setEnabled(false);
-			contactNumber.setEnabled(false);
-			contactEmailAddress.setEnabled(false);
 //		}
 //		if(importContact)
 //		{
@@ -128,6 +119,12 @@ public class ContactFragment extends Fragment
 		
 		if(TextUtils.isEmpty(contactEmailAddress.getText().toString())) {
 			btnSave.setEnabled(false);
+			contactEmailAddress.setText("Please Edit Contact to Enter An Email Address");
+			contactEmailAddress.setTextColor(Color.RED);
+			
+		}
+		else{
+			contactEmailAddress.setTextColor(Color.BLACK);
 		}
 		
 		if(getActivity().getIntent().getStringExtra("CONTACT_NUMBER").equals(""))
@@ -177,7 +174,6 @@ private void updateProjectRoleAlert()
 
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
-	// TODO Auto-generated method stub
 	contactRole.setText(items[which].getRoleDescription());
 	roll = items[which];
 	Log.i(WorkLoad.TAG,"Role Description and ids are - "+items[which].getProjectRoleID()+" "+items[which].getRoleDescription());
@@ -346,7 +342,18 @@ private void updateProjectRoleAlert()
     			Log.i(WorkLoad.TAG, "contact email = "+email);
     			contactName.setText(name);
     			contactNumber.setText(number);
-    			contactEmailAddress.setText(email);
+    			
+    			if(email.equals(""))
+    			{
+    				contactEmailAddress.setText("Please Edit Contact to Enter An Email Address");
+    				contactEmailAddress.setTextColor(Color.RED);
+    				
+    			}
+    			else
+    			{
+    				contactEmailAddress.setText(email);
+    				contactEmailAddress.setTextColor(Color.BLACK);
+    			}
     			checkIfSaveable();
 //    			Intent i = new Intent(getActivity(), ContactActivity.class);
 //    			i.putExtra("CONTACT_ID", id);
