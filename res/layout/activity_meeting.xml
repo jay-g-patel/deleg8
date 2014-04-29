@@ -153,6 +153,12 @@
                     android:layout_height="wrap_content"
                     android:text="@string/all_day" />
             </LinearLayout>
+            
+           <Button
+                        android:id="@+id/add_Attendees"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Add Attendees" />
         </LinearLayout>
     </ScrollView>
 

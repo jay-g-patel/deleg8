@@ -42,7 +42,7 @@ public class ContactFragment extends Fragment
 	Button btnEdit;
 	String cID = "";
 	int proID = 0;
-	Role roll = null;
+	Role role = null;
 	int contactRoleID = 0;
 	boolean emailUpdate = false;
 	boolean numberUpdate = false;
@@ -108,6 +108,10 @@ public class ContactFragment extends Fragment
 			String initialProjectRoleDescription = WorkLoad.getInstance().getContactProjectRoleDescription(proID, Integer.parseInt(cID));
 			contactRole.setText(initialProjectRoleDescription);
 			Log.i(WorkLoad.TAG, "project role is - "+initialProjectRoleDescription);
+		}
+		else
+		{
+			contactRole.setText("Team Member");
 		}
 		
 		
@@ -175,7 +179,7 @@ private void updateProjectRoleAlert()
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
 	contactRole.setText(items[which].getRoleDescription());
-	roll = items[which];
+	role = items[which];
 	Log.i(WorkLoad.TAG,"Role Description and ids are - "+items[which].getProjectRoleID()+" "+items[which].getRoleDescription());
 	}
 	});
@@ -272,10 +276,16 @@ private void updateProjectRoleAlert()
 				
 				Contact newContact = new Contact(cID, cName, cNumber, cEmail, projectID);
 				Log.i(WorkLoad.TAG, "Created project ID is "+newContact.getProjectID());
-				newContact.setRole(roll);
+				if(role == null)
+				{
+					role =new Role(1,proID,"Team Member");
+				}
+				role.getRoleDescription();
+				newContact.setRole(role);
 				WorkLoad.getInstance().addContactToDB(newContact);
 				Intent i = new Intent(getActivity(), AppContactsListActivity.class);
 				i.putExtra("PROJECTID",projectID);
+				getActivity().finish();
 				startActivity(i);
 
 				

@@ -143,6 +143,12 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	private void insertInitialRoles(SQLiteDatabase db)
 	{
 		ContentValues cv1 = new ContentValues();
+		
+		cv1.put(ProjectRole_ProjectID, 0); 
+		cv1.put(ProjectRole_Description, "Team Member");
+		long ToDoItemThreeId = db.insert(ProjectRolesTable, ProjectRoleID, cv1);
+		Log.i(WorkLoad.TAG, "Role details are - "+ ToDoItemThreeId+" Team Member");
+		
 		cv1.put(ProjectRole_ProjectID, 0);
 		cv1.put(ProjectRole_Description, "Team Leader");
 		long ToDoItemOneId = db.insert(ProjectRolesTable, ProjectRoleID, cv1);
@@ -151,9 +157,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 		cv1.put(ProjectRole_Description, "photographer");
 		long ToDoItemTwoId = db.insert(ProjectRolesTable, ProjectRoleID, cv1);
 		
-		cv1.put(ProjectRole_ProjectID, 0);
-		cv1.put(ProjectRole_Description, "Team Member");
-		long ToDoItemThreeId = db.insert(ProjectRolesTable, ProjectRoleID, cv1);
+		
 	}
 	
 	private void insertInitialToDoItems(SQLiteDatabase db)
@@ -495,10 +499,13 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 		Cursor cursor1 = db.rawQuery("SELECT "+ProjectRole_Description +" FROM "+ ProjectRolesTable+" WHERE "+ProjectRoleID+" = ?",new String[]{String.valueOf(pCID)});
 		String ProjectRoleDescription = "";
 		cursor1.moveToFirst();
-		if(!cursor.isAfterLast())
+		if(cursor1.getCount() != 0)
 		{
 			ProjectRoleDescription = cursor1.getString(0);
-			
+		}
+		else
+		{
+			ProjectRoleDescription = "Team Member";
 		}
 		cursor1.close();
 		

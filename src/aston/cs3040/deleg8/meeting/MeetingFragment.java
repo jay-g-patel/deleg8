@@ -31,6 +31,8 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import aston.cs3040.deleg8.R;
 import aston.cs3040.deleg8.ToDoItemActivity;
+import aston.cs3040.deleg8.contacts.ContactActivity;
+import aston.cs3040.deleg8.contacts.ContactSelectorActivity;
 import aston.cs3040.model.Meeting;
 import aston.cs3040.model.WorkLoad;
 
@@ -51,6 +53,7 @@ public class MeetingFragment extends Fragment
 	
 	private Button save;
 	private Button cancel;
+	private Button addAttendees;
 	
 	View v;
 	private OnDateSetListener startDatePickerListener;
@@ -74,6 +77,7 @@ public class MeetingFragment extends Fragment
 	public void onCreate(Bundle savedInstanceState)
 	{		
 		projectID = getActivity().getIntent().getIntExtra("PROJECTID", 0);
+		Log.i(WorkLoad.TAG, "project ID is "+projectID);
 		toDoItemID = getActivity().getIntent().getIntExtra("TODOITEMID", 0);
 		super.onCreate(savedInstanceState);
 		
@@ -85,6 +89,7 @@ public class MeetingFragment extends Fragment
 		
 		addSaveButtonListener();
 		setStartDateOnClickListener();
+		addAttendeesButtonListener();
 		
 		start_time = (Button)v.findViewById(R.id.start_time);
 		start_time.setVisibility(View.VISIBLE);
@@ -166,6 +171,27 @@ public class MeetingFragment extends Fragment
 	
 	
 	
+	private void addAttendeesButtonListener()
+	{
+		addAttendees = (Button)v.findViewById(R.id.add_Attendees);
+		addAttendees.setVisibility(View.VISIBLE);
+		addAttendees.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View view)
+			{
+				//PROJECTID
+				Intent i = new Intent(getActivity(),ContactSelectorActivity.class);
+				i.putExtra("PROJECTID",projectID);
+				Log.i(WorkLoad.TAG, "Project ID is "+projectID);
+				startActivity(i);
+				
+				
+			}
+			
+		});		
+	}
+
 	private void setStartDateOnClickListener()
 	{
 		start_date = (Button)v.findViewById(R.id.start_date);

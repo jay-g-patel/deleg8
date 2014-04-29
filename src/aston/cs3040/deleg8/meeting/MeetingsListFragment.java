@@ -95,6 +95,7 @@ public class MeetingsListFragment extends ListFragment
 			TextView titleTextView = (TextView) convertView
 					.findViewById(R.id.meeting_titleTextView);
 			// titleTextView.setText(eventID.getName());
+			Log.i(WorkLoad.TAG, " event id is "+eventID);
 			
 			String[] proj = new String[]{ Events._ID, Events.TITLE, Events.DESCRIPTION };
 			Cursor cursor = getActivity()

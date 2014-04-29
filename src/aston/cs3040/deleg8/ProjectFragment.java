@@ -182,9 +182,10 @@ public class ProjectFragment extends Fragment{
 			{
 				Intent i = new Intent(getActivity(), MeetingsListActivity.class);
 				//i.putExtra("TODOITEMID", toDoItem.getId());
-				i.putExtra("PROJECTID", getActivity().getIntent().getIntExtra("PID", 0));
+				i.putExtra("PROJECTID", project.getID());
+			
 				
-				Log.i(WorkLoad.TAG, "projectID is - "+getActivity().getIntent().getIntExtra("PID", 0));
+				Log.i(WorkLoad.TAG, "projectID From project to meeting is - "+project.getID());
 				startActivity(i);
 			}
 		}

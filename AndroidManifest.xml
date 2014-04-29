@@ -101,6 +101,10 @@
             android:name="aston.cs3040.deleg8.gallery2.GridLayoutActivity"
             android:label="@string/title_activity_grid_layout" >
         </activity>
+        <activity
+            android:name="aston.cs3040.deleg8.contacts.ContactSelectorActivity"
+            android:label="@string/title_activity_contact_selector" >
+        </activity>
     </application>
 
 </manifest>
