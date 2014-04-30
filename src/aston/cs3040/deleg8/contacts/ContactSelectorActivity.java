@@ -40,28 +40,10 @@ public class ContactSelectorActivity extends SingleFragmentActivity
 		return f;
 	}
 
-//	@Override
-//	public boolean onCreateOptionsMenu(Menu menu)
-//	{
-//		MenuInflater inflater = getMenuInflater();
-//		inflater.inflate(R.menu.contact, menu);
-//		
-//		return super.onCreateOptionsMenu(menu);
-//	}
-//	
-//	@Override 
-//	public boolean onOptionsItemSelected(MenuItem item){
-//		//take the correct action for each action button clicked
-//		switch(item.getItemId()){
-//		case R.id.action_addContact:
-//			AddContactFromPhone();
-//			return true;
-//		}
-//		return false;
-//	}
-//	
-//
-//
+
+	
+
+
 //	private void AddContactFromPhone()
 //	{
 //		Intent i = new Intent(Intent.ACTION_PICK,ContactsContract.Contacts.CONTENT_URI);

@@ -1,9 +1,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_settings"/>
+    <item android:id="@+id/action_addSelectedContacts"
+        android:icon = "@drawable/ic_action_accept"
+        android:title = "@string/ok"
+        android:showAsAction = "always"/>
+    <item android:id="@+id/action_cancelSelectingContacts"
+        android:icon = "@drawable/ic_action_cancel"
+        android:title = "@string/cancel"
+        android:showAsAction = "always"/>
 
 </menu>

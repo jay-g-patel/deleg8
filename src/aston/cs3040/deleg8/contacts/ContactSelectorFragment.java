@@ -12,10 +12,14 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -29,6 +33,33 @@ public class ContactSelectorFragment extends ListFragment
 	private ContactsArrayAdapter adapter;
 	private int contactListProjectID = 0;
 	private Contact contact = null;
+	private List<Contact> selectedContactsList = new ArrayList<Contact>();
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		Log.i(WorkLoad.TAG, "menu is being created");
+		inflater.inflate(R.menu.contact_selector, menu);
+		super.onCreateOptionsMenu(menu,inflater);
+	}
+	
+	@Override 
+	public boolean onOptionsItemSelected(MenuItem item){
+		//take the correct action for each action button clicked
+		switch(item.getItemId()){
+		case R.id.action_addSelectedContacts:
+			Log.i(WorkLoad.TAG, "list details are "+selectedContactsList.toString());
+			printOutContactsList();
+			return true;
+		case R.id.action_cancelSelectingContacts:
+			return true;
+		}
+		return false;
+	}
+	
+	private void printOutContactsList()
+	{
+		Log.i(WorkLoad.TAG, "list details are "+selectedContactsList.toString());
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -52,10 +83,7 @@ public class ContactSelectorFragment extends ListFragment
  			allContacts.add(tmpContact);
 		}
 		
-		this.setListAdapter(new ArrayAdapter<Contact>(
-				getActivity(),
-				android.R.layout.simple_list_item_1,
-				allContacts));
+	
 				
 		adapter = new ContactsArrayAdapter(getActivity(), allContacts);
 		this.setListAdapter(adapter);
@@ -117,7 +145,22 @@ public class ContactSelectorFragment extends ListFragment
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id){
 
-		
+		Log.i(WorkLoad.TAG, "item has been clicked");
+		CheckBox selectedContact = (CheckBox) v.findViewById(R.id.ContactSelectorCheckbox);
+		if(selectedContact.isChecked())
+		{
+			selectedContact.setChecked(false);
+			Contact contactToAdd = (Contact)(getListAdapter()).getItem(position);
+			selectedContactsList.remove(contactToAdd);
+			Log.i(WorkLoad.TAG, "list details are "+selectedContactsList.toString());
+		}
+		else
+		{
+			selectedContact.setChecked(true);
+			Contact contactToAdd = (Contact)(getListAdapter()).getItem(position);
+			selectedContactsList.add(contactToAdd);
+			Log.i(WorkLoad.TAG, "list details are "+selectedContactsList.toString());
+		}
 	}
 	
 	private class ContactsArrayAdapter extends ArrayAdapter<Contact> {
@@ -155,7 +198,7 @@ public class ContactSelectorFragment extends ListFragment
 			TextView titleTextView = (TextView) convertView
 					.findViewById(R.id.contact_name_chooser_text);
 			titleTextView.setText(contact.getName());
-			
+			setHasOptionsMenu(true);
 			return convertView;
 
 		}
@@ -166,4 +209,5 @@ public class ContactSelectorFragment extends ListFragment
 		
 	}
 	
+		
 }
